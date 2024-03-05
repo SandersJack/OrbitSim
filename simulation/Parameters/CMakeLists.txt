@@ -7,4 +7,4 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(Parameters SHARED ${SRC})
 
-install(TARGETS Parameters Parameters DESTINATION CMAKE_BINARY_DIR)
+install(TARGETS Parameters Parameters DESTINATION ${CMAKE_BINARY_DIR})

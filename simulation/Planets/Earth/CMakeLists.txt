@@ -14,7 +14,4 @@ target_include_directories(${SubDir}Persistency PUBLIC "${CMAKE_CURRENT_BINARY_D
 target_link_libraries(${SubDir}Persistency Parameters)
 target_link_libraries(${SubDir}Persistency myLib)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${SubDir}Persistency_rdict.pcm" DESTINATION "${LIBRARY_OUTPUT_PATH}" COMPONENT lib) 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${SubDir}Persistency.rootmap" DESTINATION "${LIBRARY_OUTPUT_PATH}" COMPONENT lib)
-
-install(TARGETS ${SubDir}Persistency DESTINATION LIBRARY_OUTPUT_PATH)
+message(LIB="${LIBRARY_OUTPUT_PATH}")
