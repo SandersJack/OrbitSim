@@ -17,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set working directory
-        run: cd simulation
         working-directory: ./simulation
       
       - name: Install root
