@@ -20,15 +20,9 @@ jobs:
         working-directory: ./simulation
         run: ./scripts/installroot.sh
 
-      - name: configure
+      - name: Test make
         working-directory: ./simulation
-        run: source scripts/env.sh
-
-      - name: test
-        working-directory: ./simulation
-        run: ls ~/root/bin/
-    
-      - name: make
-        working-directory: ./simulation
-        run: make
+        run: |
+          source scripts/env.sh
+          make
 
