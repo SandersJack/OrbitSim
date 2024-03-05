@@ -5,5 +5,3 @@ export ORBITSOURCE="${DIR}/simulation"
 alias ORBITS="${ORBITSOURCE}/build/OrbitSim"
 
 source ~/root/bin/thisroot.sh
-
-source ../.venv/bin/activate
