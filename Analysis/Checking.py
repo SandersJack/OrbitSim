@@ -1,7 +1,7 @@
 import uproot
 import matplotlib.pyplot as plt
 
-file = uproot.open("/home/jack/Code/DevTraining/Apps/Orbits/proton.root")
+file = uproot.open("proton.root")
 
 keys = file["Data"].keys()
 
