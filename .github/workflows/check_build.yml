@@ -1,0 +1,27 @@
+name: Check Build
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - bugfix/*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Cd into correct dir
+        run: cd simulation
+
+      - name: configure
+        run: source scripts/env.sh
+    
+      - name: make
+        run: make
+
