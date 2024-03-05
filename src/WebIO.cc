@@ -28,8 +28,8 @@ void WebIO::Init(){
     fJsonWritter->SetCelestialInfo(celestialInfo);
 }
 
-void WebIO::SaveStep(bool lastStep) {
-    fJsonWritter->SaveStep(lastStep);
+void WebIO::SaveStep(double time, bool lastStep) {
+    fJsonWritter->SaveStep(time, lastStep);
 }
 
 void WebIO::EndRun() {

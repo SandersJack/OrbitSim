@@ -28,8 +28,9 @@ JsonWritter *JsonWritter::GetInstance() {
   return fInstance;
 };
 
-void JsonWritter::addData(bool lastStep) {
+void JsonWritter::addData(double time, bool lastStep) {
     fjsonContent_ += "    {\n";
+    fjsonContent_ += "      \"time\": " + std::to_string(time) + ",\n";
     fjsonContent_ += "      \"planets\": [\n";
     addCelestialObjects(fCelestialInfo.planets);
     fjsonContent_ += "      ],\n";
@@ -45,7 +46,6 @@ void JsonWritter::addData(bool lastStep) {
         fjsonContent_ += "    },";
     }
     
-
 }
 
 template<typename T>
@@ -82,9 +82,8 @@ void JsonWritter::EndStep(){
     fjsonContent_ = "";
 }
 
-void JsonWritter::SaveStep(bool lastStep) {
-    std::cout << "Save Step" << std::endl;
-    addData(lastStep);
+void JsonWritter::SaveStep(double time, bool lastStep) {
+    addData(time, lastStep);
     EndStep();
 }
 

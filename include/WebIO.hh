@@ -14,7 +14,7 @@ class WebIO {
         static WebIO *GetInstance();
 
         void Init();
-        void SaveStep(bool lastStep);
+        void SaveStep(double time, bool lastStep);
         void EndRun();
 
         void SetFilename(const char *val) {fOutFilename = val;}

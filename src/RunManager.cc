@@ -134,7 +134,7 @@ void RunManager::Run() {
         // Is last one
         last = true;
       }
-      fWebIOManager->SaveStep(last);
+      fWebIOManager->SaveStep(t, last);
     } else {
       fIOManager->SaveStep();
     }

@@ -24,11 +24,11 @@ class JsonWritter {
         static JsonWritter *GetInstance();
 
         void Init();
-        void SaveStep(bool lastStep);
+        void SaveStep(double time, bool lastStep);
         void EndStep();
         void EndRun();
 
-        void addData(bool lastStep);
+        void addData(double time, bool lastStep);
 
         template<typename T>
         void addCelestialObjects(const std::vector<T*>& celestialObjects);
