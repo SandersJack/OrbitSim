@@ -16,10 +16,9 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v4
 
-      - name: Cd into correct dir
-        run: |
-          cd simulation
-          ls
+      - name: Set working directory
+        run: cd simulation
+        working-directory: ./simulation
       
       - name: Install root
         run: ./scripts/installroot.sh
