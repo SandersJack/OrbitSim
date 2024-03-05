@@ -1,34 +1,34 @@
-#include "JsonWritter.hh"
+#include "JsonWriter.hh"
 
 #include <cstdio>
 
 #include "Planets.hh"
 #include "RunManager.hh"
 
-JsonWritter::JsonWritter(): fOutFilename("proton.json"){
+JsonWriter::JsonWriter(): fOutFilename("proton.json"){
 
     std::remove(fOutFilename);
 
     fJsonFile.open(fOutFilename, std::ios::app);
 
     if (!fJsonFile.is_open()) {
-        std::cerr << "Error opening the file: " << fOutFilename << std::endl;
+        std::cerr << "[JsonWriter] Error opening the file: " << fOutFilename << std::endl;
     } else {
-        std::cout << "Saving to JSON file: " << fOutFilename << std::endl;
+        std::cout << "[JsonWriter] Saving to JSON file " << fOutFilename << std::endl;
     }
 
     fjsonContent_ = "{\n  \"simulation\": {\n \"time_steps\": [";
 }
 
-JsonWritter *JsonWritter::fInstance = nullptr;
+JsonWriter *JsonWriter::fInstance = nullptr;
 
-JsonWritter *JsonWritter::GetInstance() {
+JsonWriter *JsonWriter::GetInstance() {
   if(!fInstance)
-    fInstance = new JsonWritter();
+    fInstance = new JsonWriter();
   return fInstance;
 };
 
-void JsonWritter::addData(double time, bool lastStep) {
+void JsonWriter::addData(double time, bool lastStep) {
     fjsonContent_ += "    {\n";
     fjsonContent_ += "      \"time\": " + std::to_string(time) + ",\n";
     fjsonContent_ += "      \"planets\": [\n";
@@ -49,7 +49,7 @@ void JsonWritter::addData(double time, bool lastStep) {
 }
 
 template<typename T>
-void JsonWritter::addCelestialObjects(const std::vector<T*>& celestialObjects){
+void JsonWriter::addCelestialObjects(const std::vector<T*>& celestialObjects){
     for (auto it = celestialObjects.begin(); it != celestialObjects.end(); ++it) {
         const auto& celestialObject = *it;
         fjsonContent_ += "    {";
@@ -69,25 +69,25 @@ void JsonWritter::addCelestialObjects(const std::vector<T*>& celestialObjects){
     }
 }
 
-void JsonWritter::saveToFile(std::string content) {
+void JsonWriter::saveToFile(std::string content) {
     if (fJsonFile.is_open()) {
             fJsonFile << content;
     } else {
-        std::cerr << "Error: File not open for writing." << std::endl;
+        std::cerr << "[JsonWriter] Error: File not open for writing." << std::endl;
     }
 }
 
-void JsonWritter::EndStep(){
+void JsonWriter::EndStep(){
     saveToFile(fjsonContent_);
     fjsonContent_ = "";
 }
 
-void JsonWritter::SaveStep(double time, bool lastStep) {
+void JsonWriter::SaveStep(double time, bool lastStep) {
     addData(time, lastStep);
     EndStep();
 }
 
-void JsonWritter::EndRun() {
+void JsonWriter::EndRun() {
     fjsonContent_ = "\n  ]\n}\n}";
     saveToFile(fjsonContent_);
     fJsonFile.close();

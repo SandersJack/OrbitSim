@@ -1,5 +1,5 @@
-#ifndef JsonWritter_H
-#define JsonWritter_H 1 
+#ifndef JsonWriter_H
+#define JsonWriter_H 1 
 
 #include <iostream>
 #include <string>
@@ -16,12 +16,12 @@ struct CelestialInfo {
     std::vector<Satellite*> satellites;
 };
 
-class JsonWritter {
+class JsonWriter {
     
     public:
-        JsonWritter();
+        JsonWriter();
 
-        static JsonWritter *GetInstance();
+        static JsonWriter *GetInstance();
 
         void Init();
         void SaveStep(double time, bool lastStep);
@@ -39,7 +39,7 @@ class JsonWritter {
         void SetCelestialInfo(CelestialInfo val) {fCelestialInfo = val;}
 
     private:
-        static JsonWritter *fInstance;
+        static JsonWriter *fInstance;
 
         const char *fOutFilename;
 

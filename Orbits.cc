@@ -59,7 +59,6 @@ int main(int argc, char* argv[]){
     InputManager::GetInstance()->ParsePlanetFile(Mooninfile);
     InputManager::GetInstance()->ParsePlanetFile(Satinfile);
     RunManager *runMan = RunManager::GetInstance();
-    std::cout << "WEB " << web << std::endl;
     runMan->SetWebOut(web);
     runMan->SetTimeStep(timeStep);
     runMan->SetStopTime(stopTime);

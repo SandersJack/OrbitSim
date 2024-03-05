@@ -1,11 +1,11 @@
 #include "WebIO.hh"
-#include "JsonWritter.hh"
+#include "JsonWriter.hh"
 
 #include "Planets.hh"
 #include "RunManager.hh"
 
 WebIO::WebIO(): fOutFilename("proton.root") {
-
+    std::cout << "[WEBIO] Saving to JSON file for Web Use" << std::endl;
 }
 
 WebIO *WebIO::fInstance = nullptr;
@@ -17,7 +17,7 @@ WebIO *WebIO::GetInstance() {
 };
 
 void WebIO::Init(){
-    fJsonWritter = JsonWritter::GetInstance();
+    fJsonWriter = JsonWriter::GetInstance();
 
     CelestialInfo celestialInfo;
 
@@ -25,13 +25,13 @@ void WebIO::Init(){
     celestialInfo.moons = RunManager::GetInstance()->GetMoonList();
     celestialInfo.satellites = RunManager::GetInstance()->GetSatelliteList();
 
-    fJsonWritter->SetCelestialInfo(celestialInfo);
+    fJsonWriter->SetCelestialInfo(celestialInfo);
 }
 
 void WebIO::SaveStep(double time, bool lastStep) {
-    fJsonWritter->SaveStep(time, lastStep);
+    fJsonWriter->SaveStep(time, lastStep);
 }
 
 void WebIO::EndRun() {
-    fJsonWritter->EndRun();
+    fJsonWriter->EndRun();
 }

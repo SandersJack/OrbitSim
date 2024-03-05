@@ -1,7 +1,7 @@
 #ifndef WebIO_H
 #define WebIO_H 1 
 
-#include "JsonWritter.hh"
+#include "JsonWriter.hh"
 
 #include <iostream>
 #include <string>
@@ -24,7 +24,7 @@ class WebIO {
 
         const char *fOutFilename;
 
-        JsonWritter *fJsonWritter;
+        JsonWriter *fJsonWriter;
 };
 
 #endif
