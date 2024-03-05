@@ -5,6 +5,7 @@
 #include "Vector3D.hh"
 #include <cmath>
 #include <iostream>
+#include <string>
 
 class Planets: public TObject {
 

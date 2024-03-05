@@ -84,10 +84,15 @@ void RunManager::Init() {
     s->SetTimeStep(fdt);
   }
 
-
-  fIOManager = RootIO::GetInstance();
-  fIOManager->Init();
-  fIOManager->InitBranches();
+  if(fWebOut){
+    fWebIOManager = WebIO::GetInstance();
+    fWebIOManager->Init();
+  } else {
+    fIOManager = RootIO::GetInstance();
+    fIOManager->Init();
+    fIOManager->InitBranches();
+  } 
+  
 
   fHelper = new OrbitHelper();
 
@@ -99,7 +104,7 @@ void RunManager::Run() {
   double t = 0;
 
   // Step the Simualtion by Dt
-  for (int i=0; i*fdt<fStopTime*24*60*60; i++){
+  for (int i=0; i*fdt < fStopTime*24*60*60; i++){
     for(Planets *p : fPlanets){
       p->NextStep();
     }
@@ -123,13 +128,25 @@ void RunManager::Run() {
               << " MB, Resident: " << memoryUsage.second << " MB]" << std::endl;
     }
 
-
-
-    fIOManager->SaveStep();
+    if(fWebOut){
+      bool last = false;
+      if ((i + 1) * fdt >= fStopTime * 24 * 60 * 60) {
+        // Is last one
+        last = true;
+      }
+      fWebIOManager->SaveStep(last);
+    } else {
+      fIOManager->SaveStep();
+    }
 
   }
   
-  fIOManager->EndRun();
+  if(fWebOut){
+    fWebIOManager->EndRun();
+  } else {
+    fIOManager->EndRun();
+  }
+  
   std::cout << "[RunManager] Simulation Complete :)" << std::endl;
 }
 

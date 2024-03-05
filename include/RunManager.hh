@@ -11,6 +11,7 @@
 #include "Moon.hh"
 
 #include "RootIO.hh"
+#include "WebIO.hh"
 #include "OrbitHelper.hh"
 
 #include <iostream>
@@ -31,6 +32,8 @@ class RunManager {
 
         void SetTimeStep(double val) {fdt = val;}
         void SetStopTime(double val) {fStopTime = val;}
+
+        void SetWebOut(bool val){ fWebOut = val;}
 
         std::vector<Planets *>  GetPlanetList() { return fPlanets;}
         std::vector<Moons *>  GetMoonList() { return fMoons;}
@@ -55,6 +58,10 @@ class RunManager {
         
 
         RootIO *fIOManager; 
+        WebIO *fWebIOManager; 
+        
         OrbitHelper *fHelper;
+
+        bool fWebOut{false};
 };
 #endif

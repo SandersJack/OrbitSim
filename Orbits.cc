@@ -13,9 +13,12 @@ int main(int argc, char* argv[]){
     double timeStep = 86400; //seconds
     double stopTime = 1000; //days
 
+    bool web = false;
+
     // Parse inputs
     for (int i = 1; i < argc; i++)
     {  
+        std::cout << argv[i] << std::endl;
         if (i + 1 != argc)
         {
             if (strcmp(argv[i], "-Ts") == 0) // TimeStep
@@ -29,15 +32,23 @@ int main(int argc, char* argv[]){
                 i++;
             }
         }
+        if (strcmp(argv[i], "-web") == 0) // webOut
+            {                 
+                web = true;
+                continue;
+            }
         if (strcmp(argv[i], "-h") == 0) // Help
             {                 
+                std::cout << "-----------------------------------" << std::endl;
                 std::cout << "Displaying Help Message:" << std::endl;
                 std::cout << "-Ts <double> : Time step in seconds" << std::endl;
-                std::cout << "-----------------------------------" << std::endl;
                 std::cout << "-St <double> : Total time in days" << std::endl;
+                std::cout << "-web : Outputs data into web freindly format" << std::endl;
+                std::cout << "-----------------------------------" << std::endl;
                 exit(0);
         }
     }
+
     std::cout << "##########################################################" << std::endl;
     std::cout << "##    Running Orbit Simulation using Parameters: " << "       ##" << std::endl;
     std::cout << "##    Time Step = " << timeStep/(24*60*60) << " days. Total Time = " << stopTime << " days."  << "       ##" << std::endl;
@@ -48,6 +59,8 @@ int main(int argc, char* argv[]){
     InputManager::GetInstance()->ParsePlanetFile(Mooninfile);
     InputManager::GetInstance()->ParsePlanetFile(Satinfile);
     RunManager *runMan = RunManager::GetInstance();
+    std::cout << "WEB " << web << std::endl;
+    runMan->SetWebOut(web);
     runMan->SetTimeStep(timeStep);
     runMan->SetStopTime(stopTime);
     runMan->Init();
