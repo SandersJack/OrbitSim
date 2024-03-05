@@ -15,16 +15,16 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
-
-      - name: Set working directory
-        working-directory: ./simulation
       
       - name: Install root
+        working-directory: ./simulation
         run: ./scripts/installroot.sh
 
       - name: configure
+        working-directory: ./simulation
         run: source scripts/env.sh
     
       - name: make
+        working-directory: ./simulation
         run: make
 
