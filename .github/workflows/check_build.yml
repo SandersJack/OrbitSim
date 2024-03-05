@@ -23,6 +23,10 @@ jobs:
       - name: configure
         working-directory: ./simulation
         run: source scripts/env.sh
+
+      - name: test
+        working-directory: ./simulation
+        run: ls ~/root/bin/
     
       - name: make
         working-directory: ./simulation
