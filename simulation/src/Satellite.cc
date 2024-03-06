@@ -34,7 +34,7 @@ void Satellite::NextStep() {
         exit(1);
     }
 
-    if((fBody->GetAngle()*180 / M_PI < fStartAngle && fStart && fStartAngle != -1) || (fTime < fStartTime && fStart && fStartTime > -1)){
+    if((fBody->GetAngle() *180 / M_PI < fStartAngle && fStart && fStartAngle != -1) || (fTime < fStartTime && fStart && fStartTime != -1)){
         fPosition.SetX(fBody->GetPosition().GetX() + fOrbitRadius*cos(fBody->GetAngle()));
         fPosition.SetY(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
     } else {
