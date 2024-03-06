@@ -5,7 +5,11 @@ const jsonFileURL = '../simulation/proton.json';
 
 let camera, scene, renderer;
 const planets = [];
+const satellites = [];
+const satelliteColor = [];
+
 let trails = []
+let trails_sat = []
 let jsonData;
 let controls;
 
@@ -29,19 +33,26 @@ function createTrail(color, startpos) {
     const geometry = new THREE.BufferGeometry().setFromPoints([startpos]);
     const trail = new THREE.Line(geometry, material);
     scene.add(trail);
-    trails.push({ object: trail, points: [startpos] });
+
+    return { object: trail, points: [startpos] }
 }
 
 function initializeTrails() {
     const numPlanets = jsonData.simulation.time_steps[0].planets.length;
-    console.log(numPlanets)
     for (let i = 0; i < numPlanets; i++) {
-        
         const color = planetColors[i];
         let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 0)
-        console.log(i, "Trail Created", spos)
-        createTrail(color, spos); 
+        trails.push(createTrail(color, spos)); 
     }
+
+    const numSatellites = jsonData.simulation.time_steps[0].satellites.length;
+    for (let i = 0; i < numSatellites; i++) {
+        const color = Math.random() * 0xffffff;
+        satelliteColor.push(color)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 0)
+        trails_sat.push(createTrail(color, spos));
+    }
+    
 }
 
 function init() {
@@ -122,6 +133,34 @@ function init() {
         }
         );
 
+        jsonData.simulation.time_steps[0].satellites.forEach(
+            (satelliteData, index) => {
+                const color = new THREE.Color(satelliteColor[index]);
+                const satellitesName = jsonData.simulation.time_steps[timeIndex].satellites[index].name;
+    
+                const satellitesGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+    
+            
+                const satellite = new THREE.Mesh(
+                    satellitesGeometry
+                );
+                satellite.position.set(
+                    satelliteData.x * 1e-10,
+                    satelliteData.y * 1e-10,
+                    0
+                );
+    
+                satellite.material.color = color;
+    
+                //console.log(planetData.x, planetData.x);
+                satellites.push(satellite);
+                scene.add(satellite);
+                    
+                console.log(color.getHexString())
+                legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${satellitesName}</span></div>`;
+            }
+            );
+
         // Start the animation loop
         initializeTrails();
         animate();
@@ -152,6 +191,19 @@ function animate() {
         trails[index].points.push(planet.position.clone());
 
         trails[index].object.geometry.setFromPoints(trails[index].points);
+    });
+
+    satellites.forEach((satellite, index) => {
+        const satelliteData = jsonData.simulation.time_steps[timeIndex].satellites[index];
+        satellite.position.set(
+            satelliteData.x * 1e-10,
+            satelliteData.y * 1e-10,
+            0,
+        );
+
+        trails_sat[index].points.push(satellite.position.clone());
+
+        trails_sat[index].object.geometry.setFromPoints(trails_sat[index].points);
     });
     // Render the scene
     renderer.render(scene, camera);
