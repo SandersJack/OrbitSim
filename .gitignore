@@ -1,0 +1,4 @@
+**.root
+**/build
+**/.venv
+**.json
