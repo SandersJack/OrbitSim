@@ -3,104 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Solar System Animation</title>
+    <title>Solar System Animation</title>
     <style>
         body { margin: 0; }
     </style>
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css" />
 </head>
 <body>
-    <script type="module">
-        import * as THREE from 'https://threejs.org/build/three.module.js';
-
-        const jsonFileURL = '../simulation/proton.json';
-
-        let camera, scene, renderer;
-        const planets = [];
-        let jsonData;
-  
-        function init() {
-          // Set up the scene, camera, and renderer
-          camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-          );
-          camera.position.z = 5;
-  
-          scene = new THREE.Scene();
-  
-          renderer = new THREE.WebGLRenderer();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          document.body.appendChild(renderer.domElement);
-  
-          // Load JSON data and create celestial bodies
-          loadJSON(jsonFileURL)
-            .then(data => {
-                jsonData = data;
-              jsonData.simulation.time_steps[0].planets.forEach(
-                (planetData, index) => {
-                  const planetGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-                  const planetMaterial = new THREE.MeshBasicMaterial({
-                    color: 0x00ff00,
-                  });
-                  const planet = new THREE.Mesh(
-                    planetGeometry,
-                    planetMaterial
-                  );
-                  planet.position.set(
-                    planetData.x,
-                    planetData.y,
-                    planetData.z
-                  );
-                  planets.push(planet);
-                  scene.add(planet);
-                }
-              );
-  
-              // Start the animation loop
-              animate();
-            })
-            .catch(error => {
-              console.error('Error loading JSON:', error);
-            });
+    <div id="legend">
+    </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://threejs.org/build/three.module.js",
+          "three/addons/": "./static/js/jsm/"
         }
-  
-        function loadJSON(jsonFileURL) {
-          // Implement your JSON loading logic here
-          // You can use fetch or any other method to load the JSON data
-          return fetch(jsonFileURL).then(response => response.json());
-        }
-  
-        function animate() {
-          // Update the positions of the celestial bodies for each frame
-          // This is a simplified example; you should replace this with your actual animation logic
-          const currentTime = performance.now() / 1000; // Convert to seconds
-          const timeStep = 86400; // Time step in seconds
-  
-          const currentStep =
-          Math.floor(currentTime / timeStep) % jsonData.simulation.time_steps.length;
-  
-          planets.forEach((planet, index) => {
-            const planetData =
-              jsonData.simulation.time_steps[currentStep].planets[index];
-            planet.position.set(
-              planetData.x,
-              planetData.y,
-              planetData.z
-            );
-
-            console.log(planet.position)
-          });
-  
-          // Render the scene
-          renderer.render(scene, camera);
-  
-          // Call animate again on the next frame
-          requestAnimationFrame(animate);
-        }
-  
-        init();
+      }
     </script>
+    <script type="module" src="static/js/index.js"></script>
 </body>
 </html>
