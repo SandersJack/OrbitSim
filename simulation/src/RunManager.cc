@@ -51,23 +51,27 @@ void RunManager::Init() {
       fMoons.push_back(m);
     }
 
-    std::map<std::string, std::pair<std::string,std::string>>::iterator sat_iter = fSatMap.find(plan);
+    std::map<std::string, std::vector<std::pair<std::string, std::string>>>::iterator sat_iter = fSatMap.find(plan);
+
+    std::cout << "SatList " << fSatMap.size() << std::endl;
     if (sat_iter != fSatMap.end() )
     {
-      std::cout << "[RunManager] - " << sat_iter->second.second << std::endl;
-      std::map<std::string, std::vector<double>>::iterator atr_iter = fSatAtrMap.find(sat_iter->second.second);
-      Satellite *s = conv->GetSatelliteFunc(sat_iter->second.first);
-      if (atr_iter != fSatAtrMap.end() )
-      {
-        s->SetBody(b);
-        s->SetMass(atr_iter->second[0]);
-        s->SetStartPosition(b->GetRadius(),b->GetPosition(),atr_iter->second[1]);
-        s->SetStartVelocity(b->GetVelocity(),atr_iter->second[2]);
-        s->SetStartAngle(atr_iter->second[3]);
-        s->SetStartTime(atr_iter->second[4]);
-        s->SetName(sat_iter->second.second);
+      for(auto sat : sat_iter->second){
+        std::cout << "[RunManager] - " << sat.second << std::endl;
+        std::map<std::string, std::vector<double>>::iterator atr_iter = fSatAtrMap.find(sat.second);
+        Satellite *s = conv->GetSatelliteFunc(sat.first);
+        if (atr_iter != fSatAtrMap.end() )
+        {
+          s->SetBody(b);
+          s->SetMass(atr_iter->second[0]);
+          s->SetStartPosition(b->GetRadius(),b->GetPosition(),atr_iter->second[1]);
+          s->SetStartVelocity(b->GetVelocity(),atr_iter->second[2]);
+          s->SetStartAngle(atr_iter->second[3]);
+          s->SetStartTime(atr_iter->second[4]);
+          s->SetName(sat.second);
+        }
+        fSatellites.push_back(s);
       }
-      fSatellites.push_back(s);
     }
   }
 

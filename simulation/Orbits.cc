@@ -31,6 +31,11 @@ int main(int argc, char* argv[]){
                 stopTime = std::stod(argv[i + 1]);
                 i++;
             }
+            if (strcmp(argv[i], "-SatList") == 0) // StopTime
+            {                 
+                Satinfile = (argv[i + 1]);
+                i++;
+            }
         }
         if (strcmp(argv[i], "-web") == 0) // webOut
             {                 

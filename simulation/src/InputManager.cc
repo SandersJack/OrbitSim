@@ -75,6 +75,7 @@ void InputManager::ParsePlanetFile(std::string file) {
             std::vector<double> Atributes;
             bool write = false;
             bool write_name = false;
+            std::cout << "tokens: " << iss.str() << std::endl;
             for(int t{0}; t<tokens.size(); t++){
                 if(t == 0){
                     for (int i = 0; i < tokens[t].length(); i++) {
@@ -97,15 +98,17 @@ void InputManager::ParsePlanetFile(std::string file) {
                             Planet += x[i];
                         }
                     }
-                    fSatelliteList.insert({Planet,std::pair(Sat,name)});
+                    std::cout << "Name: " << name << std::endl;
+                    fSatelliteList[Planet].push_back(std::make_pair(Sat,name));
                 }
                 if(t>0){
                     int inter = std::stod(tokens[t]);
+                    //std::cout << inter << std::endl;
                     Atributes.push_back(inter);
                 }
             }
             fSatelliteAtributesList.insert({name,Atributes});
         }
     }
-
+    std::cout << "fSatelliteList " << fSatelliteList.size() << std::endl;
 }

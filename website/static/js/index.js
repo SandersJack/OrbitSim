@@ -38,21 +38,21 @@ function createTrail(color, startpos) {
 }
 
 function initializeTrails() {
+    const numSatellites = jsonData.simulation.time_steps[0].satellites.length;
+
+    for (let i = 0; i < numSatellites; i++) {
+        const randomColor = 0xffffff;
+        satelliteColor.push(randomColor)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 0)
+        trails_sat.push(createTrail(randomColor, spos));
+    }
+
     const numPlanets = jsonData.simulation.time_steps[0].planets.length;
     for (let i = 0; i < numPlanets; i++) {
         const color = planetColors[i];
         let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 0)
         trails.push(createTrail(color, spos)); 
     }
-
-    const numSatellites = jsonData.simulation.time_steps[0].satellites.length;
-    for (let i = 0; i < numSatellites; i++) {
-        const color = Math.random() * 0xffffff;
-        satelliteColor.push(color)
-        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 0)
-        trails_sat.push(createTrail(color, spos));
-    }
-    
 }
 
 function init() {
@@ -128,7 +128,6 @@ function init() {
             planets.push(planet);
             scene.add(planet);
                 
-            console.log(color.getHexString())
             legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${planetName}</span></div>`;
         }
         );
@@ -156,7 +155,6 @@ function init() {
                 satellites.push(satellite);
                 scene.add(satellite);
                     
-                console.log(color.getHexString())
                 legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${satellitesName}</span></div>`;
             }
             );
@@ -216,7 +214,7 @@ function animate() {
         setTimeout(() => {
             // Call animate again on the next frame
             requestAnimationFrame(animate);
-        }, 10); // Adjust the delay as needed
+        }, 100); // Adjust the delay as needed
     }
 }
 

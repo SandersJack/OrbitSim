@@ -1,0 +1,12 @@
+# List of Satelites to be simulated 
+# Satellite(Name,Body that it is in orbit around) Mass[kg] OrbitHeight[km] DeltaV[m/s] LaunchLongatude[Deg] LaunchTime[Day] 
+Satellite(Satellite0,Earth) 10000 500 2900 -1 0
+Satellite(Satellite1,Earth) 10000 500 2900 -1 100
+Satellite(Satellite2,Earth) 10000 500 2900 -1 200
+Satellite(Satellite3,Earth) 10000 500 2900 -1 300
+Satellite(Satellite4,Earth) 10000 500 2900 -1 400
+Satellite(Satellite5,Earth) 10000 500 2900 -1 500
+Satellite(Satellite6,Earth) 10000 500 2900 -1 600
+Satellite(Satellite7,Earth) 10000 500 2900 -1 700
+Satellite(Satellite8,Earth) 10000 500 2900 -1 800
+Satellite(Satellite9,Earth) 10000 500 2900 -1 900
