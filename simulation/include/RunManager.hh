@@ -48,12 +48,13 @@ class RunManager {
 
         std::vector<Planets *> fPlanets;
         std::vector<std::string> fPlanetList;
+        std::map<std::string, std::vector<double>> fPlanetAtrMap;
 
         std::vector<Moons *> fMoons;
         std::map<std::string, std::string> fMoonMap;
 
         std::vector<Satellite *> fSatellites;
-       std::map<std::string, std::vector<std::pair<std::string, std::string>>> fSatMap;
+        std::map<std::string, std::vector<std::pair<std::string, std::string>>> fSatMap;
         std::map<std::string, std::vector<double>> fSatAtrMap;
         
 

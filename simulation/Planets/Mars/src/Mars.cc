@@ -15,8 +15,6 @@ Mars::~Mars(){
 void Mars::Init(){
     MarsParameters *EParam = MarsParameters::GetInstance();
     fMass = EParam->GetMass();
-    fPosition = Vector3D(EParam->GetStartPos());
-    fVelocity = Vector3D(EParam->GetStartVel());
     fRadius = EParam->GetRadius();
 }
 

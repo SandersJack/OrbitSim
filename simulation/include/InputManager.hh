@@ -16,6 +16,8 @@ class InputManager {
         void ParsePlanetFile(std::string file="config/PlanetsList.dat");
 
         std::vector<std::string> GetPlanetList(){ return fPlanetList;}
+        std::map<std::string, std::vector<double>> GetPlanetAtributesList(){ return fPlanetAtributesList;}
+
 
         std::map<std::string, std::string> GetMoonList(){ return fMoonsList;}
 
@@ -26,6 +28,7 @@ class InputManager {
         static InputManager *fInstance;
 
         std::vector<std::string> fPlanetList;
+        std::map<std::string, std::vector<double>> fPlanetAtributesList;
 
         std::map<std::string, std::string> fMoonsList;
 

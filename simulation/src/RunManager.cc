@@ -27,8 +27,10 @@ RunManager *RunManager::GetInstance() {
 };
 
 void RunManager::Init() {
+  double AU = 1.495e11;
 
   fPlanetList = InputManager::GetInstance()->GetPlanetList();
+  fPlanetAtrMap = InputManager::GetInstance()->GetPlanetAtributesList();
 
   fMoonMap = InputManager::GetInstance()->GetMoonList();
 
@@ -40,8 +42,17 @@ void RunManager::Init() {
   std::cout << "[RunManager] Simulation using Planets: " << std::endl;
   for(std::string plan : fPlanetList){
     std::cout << "[RunManager] " << plan << std::endl;
+    std::map<std::string, std::vector<double>>::iterator atr_iter = fPlanetAtrMap.find(plan);
     Planets *b = conv->GetPlanetFunc(plan);
+    if (atr_iter != fPlanetAtrMap.end() )
+    {
+      Vector3D pos = Vector3D(atr_iter->second[0] * AU, atr_iter->second[1] * AU, 0); // , atr_iter->second[2] * AU);
+      Vector3D vel = Vector3D(atr_iter->second[3], atr_iter->second[4], 0); // atr_iter->second[5] * AU);
+      b->SetPosition(pos);
+      b->SetVelocity(vel);
+    }
     fPlanets.push_back(b);
+
     std::map<std::string, std::string>::iterator iter = fMoonMap.find(plan);
     if (iter != fMoonMap.end() )
     {
@@ -53,7 +64,6 @@ void RunManager::Init() {
 
     std::map<std::string, std::vector<std::pair<std::string, std::string>>>::iterator sat_iter = fSatMap.find(plan);
 
-    std::cout << "SatList " << fSatMap.size() << std::endl;
     if (sat_iter != fSatMap.end() )
     {
       for(auto sat : sat_iter->second){

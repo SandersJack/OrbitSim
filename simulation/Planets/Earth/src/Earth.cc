@@ -15,8 +15,6 @@ Earth::~Earth(){
 void Earth::Init(){
     EarthParameters *EParam = EarthParameters::GetInstance();
     fMass = EParam->GetMass();
-    fPosition = Vector3D(EParam->GetStartPos());
-    fVelocity = Vector3D(EParam->GetStartVel());
     fRadius = EParam->GetRadius();
 }
 

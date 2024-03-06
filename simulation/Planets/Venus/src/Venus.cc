@@ -15,8 +15,6 @@ Venus::~Venus(){
 void Venus::Init(){
     VenusParameters *EParam = VenusParameters::GetInstance();
     fMass = EParam->GetMass();
-    fPosition = Vector3D(EParam->GetStartPos());
-    fVelocity = Vector3D(EParam->GetStartVel());
     fRadius = EParam->GetRadius();
 }
 

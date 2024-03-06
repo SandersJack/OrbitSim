@@ -15,8 +15,6 @@ Mercury::~Mercury(){
 void Mercury::Init(){
     MercuryParameters *EParam = MercuryParameters::GetInstance();
     fMass = EParam->GetMass();
-    fPosition = Vector3D(EParam->GetStartPos());
-    fVelocity = Vector3D(EParam->GetStartVel());
     fRadius = EParam->GetRadius();
 }
 

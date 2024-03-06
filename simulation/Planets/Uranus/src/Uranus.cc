@@ -15,8 +15,6 @@ Uranus::~Uranus(){
 void Uranus::Init(){
     UranusParameters *EParam = UranusParameters::GetInstance();
     fMass = EParam->GetMass();
-    fPosition = Vector3D(EParam->GetStartPos());
-    fVelocity = Vector3D(EParam->GetStartVel());
     fRadius = EParam->GetRadius();
 }
 

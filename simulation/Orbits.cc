@@ -18,7 +18,6 @@ int main(int argc, char* argv[]){
     // Parse inputs
     for (int i = 1; i < argc; i++)
     {  
-        std::cout << argv[i] << std::endl;
         if (i + 1 != argc)
         {
             if (strcmp(argv[i], "-Ts") == 0) // TimeStep
