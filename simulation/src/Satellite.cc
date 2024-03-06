@@ -42,9 +42,12 @@ void Satellite::NextStep() {
             fPosition.SetX(fBody->GetPosition().GetX() + fOrbitRadius*cos(fBody->GetAngle()));
             fPosition.SetY(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
             fVelocity = Vector3D(fBody->GetVelocity());
-            fVelocity.AddX(fDeltaV*sin(fBody->GetAngle()));
+
+            fVelocity.AddX(-fDeltaV*sin(fBody->GetAngle()));
             fVelocity.AddY(fDeltaV*cos(fBody->GetAngle()));
             fStart = false;
+            fVelocity.Print();
+            std::cout << fBody->GetAngle() << std::endl;
         }
 
         PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
