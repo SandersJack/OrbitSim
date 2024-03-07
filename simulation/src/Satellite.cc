@@ -10,20 +10,22 @@ Satellite::Satellite():fMass(0), fdt(0) , fTime(0), fName("c"), fStartAngle(-1),
 
 Satellite::~Satellite(){}
 
-void Satellite::SetStartPosition(double body_radius, Vector3D body_val,double sat_val){
+void Satellite::SetStartPosition(double body_radius, Vector3D body_val, double sat_val){
 
-    fPosition = Vector3D(body_val);
-    fPosition.AddX(sat_val*1e3+body_radius);
-    fOrbitRadius = sat_val*1e3;
+    fInclination = 0;
+    fLongitude = 180;
+    fOrbitRadius = body_radius + sat_val * 1e3;
+    fPosition = Vector3D();
+    fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + body_val.GetX());
+    fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + body_val.GetY());
+    fPosition.SetZ(fOrbitRadius * sin(fInclination) + body_val.GetZ());
 
 }
 
-void Satellite::SetStartVelocity(Vector3D body_val,double sat_val){
+void Satellite::SetStartVelocity(Vector3D body_val, double sat_val){
 
     fVelocity = Vector3D(body_val);
-    fVelocity.AddY(sat_val);
     fDeltaV = sat_val;
-
 }
 
 
@@ -35,25 +37,34 @@ void Satellite::NextStep() {
     }
 
     if((fBody->GetAngle() *180 / M_PI < fStartAngle && fStart && fStartAngle != -1) || (fTime < fStartTime && fStart && fStartTime != -1)){
-        fPosition.SetX(fBody->GetPosition().GetX() + fOrbitRadius*cos(fBody->GetAngle()));
-        fPosition.SetY(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
-        fPosition.SetZ(fBody->GetPosition().GetZ() + fOrbitRadius*sin(fBody->GetAngle()));
+        fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
+        fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
+        fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
     } else {
         if(fStart){
-            fPosition.SetX(fBody->GetPosition().GetX() + fOrbitRadius*cos(fBody->GetAngle()));
-            fPosition.SetY(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
-            fPosition.SetZ(fBody->GetPosition().GetZ() + fOrbitRadius*sin(fBody->GetAngle()));
+            fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
+            fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
+            fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
+
             fVelocity = Vector3D(fBody->GetVelocity());
 
-            fVelocity.AddX(-fDeltaV*sin(fBody->GetAngle()));
-            fVelocity.AddY(fDeltaV*cos(fBody->GetAngle()));
-            fStart = false;
+            Vector3D direction = fVelocity;
+            direction.Normalize();
+
+            // Scale the velocity vector
+            fVelocity.Add(direction.Multiply(fDeltaV));
+            fStart=false;
         }
 
         PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
 
-        
-        Vector3D Sat_a = PhysicsEqs->GetSatelliteAcceleration(fPosition, fMass, 1e10);
+        std::pair<Vector3D, Vector3D> out = PhysicsEqs->RungeKuttaStep(fPosition, fVelocity, fMass, fdt);
+
+        fPosition = out.first;
+        fVelocity = out.second;
+
+        /*
+        Vector3D Sat_a = PhysicsEqs->GetSatelliteAcceleration(fPosition, fMass);
 
         fAcceleration = Sat_a;
 
@@ -61,11 +72,10 @@ void Satellite::NextStep() {
         fVelocity.AddY(Sat_a.GetY()*fdt);
         fVelocity.AddZ(Sat_a.GetZ()*fdt);
 
-
         fPosition.AddX(fVelocity.GetX()*fdt);
         fPosition.AddY(fVelocity.GetY()*fdt);
         fPosition.AddZ(fVelocity.GetZ()*fdt);
-        
+        */
     }
     fTime += fdt;
 }

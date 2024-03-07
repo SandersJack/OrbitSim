@@ -74,7 +74,7 @@ void RunManager::Init() {
         {
           s->SetBody(b);
           s->SetMass(atr_iter->second[0]);
-          s->SetStartPosition(b->GetRadius(),b->GetPosition(),atr_iter->second[1]);
+          s->SetStartPosition(b->GetRadius(), b->GetPosition(), atr_iter->second[1]);
           s->SetStartVelocity(b->GetVelocity(),atr_iter->second[2]);
           s->SetStartAngle(atr_iter->second[3]);
           s->SetStartTime(atr_iter->second[4]);

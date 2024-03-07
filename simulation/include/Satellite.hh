@@ -12,8 +12,8 @@ class Satellite: public TObject {
         Satellite();
         ~Satellite();
 
-        void SetStartPosition(double body_radius, Vector3D body_val,double sat_val);
-        void SetStartVelocity(Vector3D body_val,double sat_val);
+        void SetStartPosition(double body_radius, Vector3D body_val, double sat_val);
+        void SetStartVelocity(Vector3D body_val, double sat_val);
 
         void SetPosition(Vector3D val){ fPosition = val;};
         void SetVelocity(Vector3D val){ fVelocity = val;};
@@ -52,6 +52,9 @@ class Satellite: public TObject {
         double fOrbitRadius;
         double fDeltaV;
         bool fStart;
+
+        double fInclination = 0;
+        double fLongitude = 0;
 
 
         std::string fName;

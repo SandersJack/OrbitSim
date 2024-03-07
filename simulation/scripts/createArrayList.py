@@ -27,11 +27,11 @@ def append_satellites_to_file(file_path, satellites):
 
 def main():
     existing_file_path = "config/SatelliteList_array.txt"
-    num_new_satellites = 10 
+    num_new_satellites = 200    
     mass = 10000
-    orbit_height = 500
+    orbit_height = 50000
     delta_v = 2900
-    launch_step_days = 100
+    launch_step_days = 5
     new_satellites = generate_satellites(num_new_satellites, mass, orbit_height, delta_v, launch_step_days)
     append_satellites_to_file(existing_file_path, new_satellites)
 
