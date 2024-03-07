@@ -56,6 +56,8 @@ class Satellite: public TObject {
         double fInclination = 0;
         double fLongitude = 0;
 
+        int fStepsSinceLaunch;
+
 
         std::string fName;
 

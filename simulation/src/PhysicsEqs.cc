@@ -37,13 +37,14 @@ Vector3D PhysicsEqs::GetAcceleration(Vector3D pos1, Vector3D pos2, double mass1,
 
 static double GetSofteningFactor(double distance) {
 
-  double baseSoftening = 1e4;
-  double threshold = 1.0;
-  double soft = baseSoftening * (1.0 + distance / threshold);
+  double baseSoftening = 1;
+  double threshold = 1e8;
+  double soft = baseSoftening; //* (threshold / distance);
+  //std::cout << "Soft " << soft << " " << distance << std::endl;
   return soft;
 }
 
-Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1){
+Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::string bodyStartName, int stepsSinceLaunch){
 
     std::vector<Planets*> fPlanets = RunManager::GetInstance()->GetPlanetList();
     Vector3D acc_1 = Vector3D();
@@ -67,6 +68,12 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1){
 
     // Calc for Planets
     for(Planets *p : fPlanets){
+
+      std::string name = p->GetName();
+
+      if(name == bodyStartName && stepsSinceLaunch < 11){
+        continue; //Ignore start body for 10 steps after launch
+      }
         
       double dx_n = (pos1.GetX() - p->GetPosition().GetX());
       double dy_n = (pos1.GetY() - p->GetPosition().GetY());
@@ -87,30 +94,30 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1){
     return acc_1;
 }
 
-std::pair<Vector3D, Vector3D> PhysicsEqs::RungeKuttaStep(Vector3D position, Vector3D velocity, double mass, double dt) {
+std::pair<Vector3D, Vector3D> PhysicsEqs::RungeKuttaStep(Vector3D position, Vector3D velocity, double mass, double dt, std::string bodyStartName, int stepsSinceLaunch) {
     // Initial acceleration
-    Vector3D k1 = GetSatelliteAcceleration(position, mass);
+    Vector3D k1 = GetSatelliteAcceleration(position, mass, bodyStartName, stepsSinceLaunch);
 
     // Update position and velocity using k1
     Vector3D pos_k2 = position + velocity * (dt / 2.0);
     Vector3D vel_k2 = velocity + k1 * (dt / 2.0);
     
     // Calculate acceleration at pos_k2
-    Vector3D k2 = GetSatelliteAcceleration(pos_k2, mass);
+    Vector3D k2 = GetSatelliteAcceleration(pos_k2, mass, bodyStartName, stepsSinceLaunch);
 
     // Update position and velocity using k2
     Vector3D pos_k3 = position + vel_k2 * (dt / 2.0);
     Vector3D vel_k3 = velocity + k2 * (dt / 2.0);
     
     // Calculate acceleration at pos_k3
-    Vector3D k3 = GetSatelliteAcceleration(pos_k3, mass);
+    Vector3D k3 = GetSatelliteAcceleration(pos_k3, mass, bodyStartName, stepsSinceLaunch);
 
     // Update position and velocity using k3
     Vector3D pos_k4 = position + vel_k3 * dt;
     Vector3D vel_k4 = velocity + k3 * dt;
     
     // Calculate acceleration at pos_k4
-    Vector3D k4 = GetSatelliteAcceleration(pos_k4, mass);
+    Vector3D k4 = GetSatelliteAcceleration(pos_k4, mass, bodyStartName, stepsSinceLaunch);
 
     // Combine results using weighted averages
     Vector3D newPos = position + (velocity + vel_k2 * 2.0 + vel_k3 * 2.0 + vel_k4) * (dt / 6.0);

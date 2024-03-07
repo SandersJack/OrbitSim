@@ -20,6 +20,8 @@ void Satellite::SetStartPosition(double body_radius, Vector3D body_val, double s
     fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + body_val.GetY());
     fPosition.SetZ(fOrbitRadius * sin(fInclination) + body_val.GetZ());
 
+    fStepsSinceLaunch = 0;
+
 }
 
 void Satellite::SetStartVelocity(Vector3D body_val, double sat_val){
@@ -37,15 +39,34 @@ void Satellite::NextStep() {
     }
 
     if((fBody->GetAngle() *180 / M_PI < fStartAngle && fStart && fStartAngle != -1) || (fTime < fStartTime && fStart && fStartTime != -1)){
+
+        Vector3D direction_to_earth = fBody->GetPosition();
+        direction_to_earth.Normalize();
+
+        Vector3D satellite_position = fBody->GetPosition() + direction_to_earth * (fOrbitRadius);
+
+        fPosition = satellite_position;
+
+        /*
         fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
         fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
         fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
+        */
     } else {
         if(fStart){
+
+            Vector3D direction_to_earth = fBody->GetPosition();
+            direction_to_earth.Normalize();
+
+            Vector3D satellite_position = fBody->GetPosition() + direction_to_earth * (fOrbitRadius);
+
+            fPosition = satellite_position;
+
+            /*
             fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
             fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
             fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
-
+            */
             fVelocity = Vector3D(fBody->GetVelocity());
 
             Vector3D direction = fVelocity;
@@ -58,7 +79,7 @@ void Satellite::NextStep() {
 
         PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
 
-        std::pair<Vector3D, Vector3D> out = PhysicsEqs->RungeKuttaStep(fPosition, fVelocity, fMass, fdt);
+        std::pair<Vector3D, Vector3D> out = PhysicsEqs->RungeKuttaStep(fPosition, fVelocity, fMass, fdt, fBody->GetName(), fStepsSinceLaunch);
 
         fPosition = out.first;
         fVelocity = out.second;
@@ -76,6 +97,8 @@ void Satellite::NextStep() {
         fPosition.AddY(fVelocity.GetY()*fdt);
         fPosition.AddZ(fVelocity.GetZ()*fdt);
         */
+
+        fStepsSinceLaunch++; 
     }
     fTime += fdt;
 }
