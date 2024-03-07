@@ -38,21 +38,23 @@ function createTrail(color, startpos) {
 }
 
 function initializeTrails() {
+    const numSatellites = jsonData.simulation.time_steps[0].satellites.length;
+
+    for (let i = 0; i < numSatellites; i++) {
+        const randomColor = 0xffffff;
+        satelliteColor.push(randomColor)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 
+            jsonData.simulation.time_steps[0].satellites[i].z  * 1e-10)
+        trails_sat.push(createTrail(randomColor, spos));
+    }
+
     const numPlanets = jsonData.simulation.time_steps[0].planets.length;
     for (let i = 0; i < numPlanets; i++) {
         const color = planetColors[i];
-        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 0)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 
+            jsonData.simulation.time_steps[0].planets[i].z  * 1e-10)
         trails.push(createTrail(color, spos)); 
     }
-
-    const numSatellites = jsonData.simulation.time_steps[0].satellites.length;
-    for (let i = 0; i < numSatellites; i++) {
-        const color = Math.random() * 0xffffff;
-        satelliteColor.push(color)
-        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 0)
-        trails_sat.push(createTrail(color, spos));
-    }
-    
 }
 
 function init() {
@@ -117,9 +119,9 @@ function init() {
                 planetGeometry
             );
             planet.position.set(
-            planetData.x * 1e-10,
-            planetData.y * 1e-10,
-            0
+                planetData.x * 1e-10,
+                planetData.y * 1e-10,
+                planetData.z * 1e-10
             );
 
             planet.material.color = color;
@@ -128,7 +130,6 @@ function init() {
             planets.push(planet);
             scene.add(planet);
                 
-            console.log(color.getHexString())
             legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${planetName}</span></div>`;
         }
         );
@@ -147,7 +148,7 @@ function init() {
                 satellite.position.set(
                     satelliteData.x * 1e-10,
                     satelliteData.y * 1e-10,
-                    0
+                    satelliteData.z * 1e-10
                 );
     
                 satellite.material.color = color;
@@ -156,7 +157,6 @@ function init() {
                 satellites.push(satellite);
                 scene.add(satellite);
                     
-                console.log(color.getHexString())
                 legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${satellitesName}</span></div>`;
             }
             );
@@ -177,47 +177,46 @@ function loadJSON(jsonFileURL) {
 }
 
 function animate() {
+    if (timeIndex < jsonData.simulation.time_steps.length) {
+        planets.forEach((planet, index) => {
+            const planetData = jsonData.simulation.time_steps[timeIndex].planets[index];
+            planet.position.set(
+                planetData.x * 1e-10,
+                planetData.y * 1e-10,
+                planetData.z * 1e-10,
+            );
 
-    planets.forEach((planet, index) => {
-        const planetData = jsonData.simulation.time_steps[timeIndex].planets[index];
-        planet.position.set(
-            planetData.x * 1e-10,
-            planetData.y * 1e-10,
-            0,
-        );
+            //console.log("update", planet.position)
 
-        //console.log("update", planet.position)
+            trails[index].points.push(planet.position.clone());
 
-        trails[index].points.push(planet.position.clone());
+            trails[index].object.geometry.setFromPoints(trails[index].points);
+        });
 
-        trails[index].object.geometry.setFromPoints(trails[index].points);
-    });
+        satellites.forEach((satellite, index) => {
+            const satelliteData = jsonData.simulation.time_steps[timeIndex].satellites[index];
+            satellite.position.set(
+                satelliteData.x * 1e-10,
+                satelliteData.y * 1e-10,
+                satelliteData.z * 1e-10,
+            );
 
-    satellites.forEach((satellite, index) => {
-        const satelliteData = jsonData.simulation.time_steps[timeIndex].satellites[index];
-        satellite.position.set(
-            satelliteData.x * 1e-10,
-            satelliteData.y * 1e-10,
-            0,
-        );
+            trails_sat[index].points.push(satellite.position.clone());
 
-        trails_sat[index].points.push(satellite.position.clone());
-
-        trails_sat[index].object.geometry.setFromPoints(trails_sat[index].points);
-    });
+            trails_sat[index].object.geometry.setFromPoints(trails_sat[index].points);
+        });
+    }
     // Render the scene
     renderer.render(scene, camera);
     
     controls.update();
     timeIndex += 1;
 
-    if (timeIndex < jsonData.simulation.time_steps.length) {
-        // Use setTimeout to introduce a delay (e.g., 100 milliseconds)
-        setTimeout(() => {
-            // Call animate again on the next frame
-            requestAnimationFrame(animate);
-        }, 10); // Adjust the delay as needed
-    }
+    setTimeout(() => {
+        // Call animate again on the next frame
+        requestAnimationFrame(animate);
+    }, 100); // Adjust the delay as needed
+
 }
 
 init();

@@ -18,7 +18,6 @@ int main(int argc, char* argv[]){
     // Parse inputs
     for (int i = 1; i < argc; i++)
     {  
-        std::cout << argv[i] << std::endl;
         if (i + 1 != argc)
         {
             if (strcmp(argv[i], "-Ts") == 0) // TimeStep
@@ -29,6 +28,11 @@ int main(int argc, char* argv[]){
             if (strcmp(argv[i], "-St") == 0) // StopTime
             {                 
                 stopTime = std::stod(argv[i + 1]);
+                i++;
+            }
+            if (strcmp(argv[i], "-SatList") == 0) // StopTime
+            {                 
+                Satinfile = (argv[i + 1]);
                 i++;
             }
         }
@@ -44,6 +48,7 @@ int main(int argc, char* argv[]){
                 std::cout << "-Ts <double> : Time step in seconds" << std::endl;
                 std::cout << "-St <double> : Total time in days" << std::endl;
                 std::cout << "-web : Outputs data into web freindly format" << std::endl;
+                std::cout << "-SatList : Input Sat List" << std::endl;
                 std::cout << "-----------------------------------" << std::endl;
                 exit(0);
         }

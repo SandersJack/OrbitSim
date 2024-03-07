@@ -24,11 +24,21 @@ class Vector3D: public TObject {
         void AddX(double val){fx += val;}
         void AddY(double val){fy += val;}
         void AddZ(double val){fz += val;}
+        Vector3D& Add(Vector3D& other);
+
+        Vector3D& Multiply(double scaler);
+
+        void Normalize();
+
+        Vector3D Cross(Vector3D& other);
+
+        Vector3D operator*(double scalar) const;
+        Vector3D operator+(const Vector3D& other) const;
 
         void Print();
 
         ClassDef(Vector3D, 1);
-    private:
+        
         double fx, fy,fz;
 };
 
