@@ -48,6 +48,7 @@ int main(int argc, char* argv[]){
                 std::cout << "-Ts <double> : Time step in seconds" << std::endl;
                 std::cout << "-St <double> : Total time in days" << std::endl;
                 std::cout << "-web : Outputs data into web freindly format" << std::endl;
+                std::cout << "-SatList : Input Sat List" << std::endl;
                 std::cout << "-----------------------------------" << std::endl;
                 exit(0);
         }

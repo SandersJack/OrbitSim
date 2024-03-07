@@ -58,11 +58,11 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, doubl
     // Calc for Planets
     for(Planets *p : fPlanets){
         
-      double dx = (pos1.GetX() - p->GetPosition().GetX());
-      double dy = (pos1.GetY() - p->GetPosition().GetY());
-      double dz = (pos1.GetZ() - p->GetPosition().GetZ());
+      double dx_n = (pos1.GetX() - p->GetPosition().GetX());
+      double dy_n = (pos1.GetY() - p->GetPosition().GetY());
+      double dz_n = (pos1.GetZ() - p->GetPosition().GetZ());
 
-      double inv_r3 = pow((pow(dx,2) + pow(dy,2) + pow(dz,2) + pow(soft,2)),(-1.5));
+      double inv_r3 = pow((pow(dx_n,2) + pow(dy_n,2) + pow(dz_n,2) + pow(soft,2)),(-1.5));
       
       acc_1.AddX(-fG_const * (dx * inv_r3) * p->GetMass());
       acc_1.AddY(-fG_const * (dy * inv_r3) * p->GetMass());
