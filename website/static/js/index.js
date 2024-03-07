@@ -44,7 +44,7 @@ function initializeTrails() {
         const randomColor = 0xffffff;
         satelliteColor.push(randomColor)
         let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 
-            jsonData.simulation.time_steps[0].planets[i].z  * 1e-10)
+            jsonData.simulation.time_steps[0].satellites[i].z  * 1e-10)
         trails_sat.push(createTrail(randomColor, spos));
     }
 
@@ -119,9 +119,9 @@ function init() {
                 planetGeometry
             );
             planet.position.set(
-            planetData.x * 1e-10,
-            planetData.y * 1e-10,
-            0
+                planetData.x * 1e-10,
+                planetData.y * 1e-10,
+                planetData.z * 1e-10
             );
 
             planet.material.color = color;
@@ -183,7 +183,7 @@ function animate() {
         planet.position.set(
             planetData.x * 1e-10,
             planetData.y * 1e-10,
-            0,
+            planetData.z * 1e-10,
         );
 
         //console.log("update", planet.position)
@@ -198,7 +198,7 @@ function animate() {
         satellite.position.set(
             satelliteData.x * 1e-10,
             satelliteData.y * 1e-10,
-            0,
+            satelliteData.z * 1e-10,
         );
 
         trails_sat[index].points.push(satellite.position.clone());
