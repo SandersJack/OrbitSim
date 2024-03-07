@@ -177,47 +177,46 @@ function loadJSON(jsonFileURL) {
 }
 
 function animate() {
+    if (timeIndex < jsonData.simulation.time_steps.length) {
+        planets.forEach((planet, index) => {
+            const planetData = jsonData.simulation.time_steps[timeIndex].planets[index];
+            planet.position.set(
+                planetData.x * 1e-10,
+                planetData.y * 1e-10,
+                planetData.z * 1e-10,
+            );
 
-    planets.forEach((planet, index) => {
-        const planetData = jsonData.simulation.time_steps[timeIndex].planets[index];
-        planet.position.set(
-            planetData.x * 1e-10,
-            planetData.y * 1e-10,
-            planetData.z * 1e-10,
-        );
+            //console.log("update", planet.position)
 
-        //console.log("update", planet.position)
+            trails[index].points.push(planet.position.clone());
 
-        trails[index].points.push(planet.position.clone());
+            trails[index].object.geometry.setFromPoints(trails[index].points);
+        });
 
-        trails[index].object.geometry.setFromPoints(trails[index].points);
-    });
+        satellites.forEach((satellite, index) => {
+            const satelliteData = jsonData.simulation.time_steps[timeIndex].satellites[index];
+            satellite.position.set(
+                satelliteData.x * 1e-10,
+                satelliteData.y * 1e-10,
+                satelliteData.z * 1e-10,
+            );
 
-    satellites.forEach((satellite, index) => {
-        const satelliteData = jsonData.simulation.time_steps[timeIndex].satellites[index];
-        satellite.position.set(
-            satelliteData.x * 1e-10,
-            satelliteData.y * 1e-10,
-            satelliteData.z * 1e-10,
-        );
+            trails_sat[index].points.push(satellite.position.clone());
 
-        trails_sat[index].points.push(satellite.position.clone());
-
-        trails_sat[index].object.geometry.setFromPoints(trails_sat[index].points);
-    });
+            trails_sat[index].object.geometry.setFromPoints(trails_sat[index].points);
+        });
+    }
     // Render the scene
     renderer.render(scene, camera);
     
     controls.update();
     timeIndex += 1;
 
-    if (timeIndex < jsonData.simulation.time_steps.length) {
-        // Use setTimeout to introduce a delay (e.g., 100 milliseconds)
-        setTimeout(() => {
-            // Call animate again on the next frame
-            requestAnimationFrame(animate);
-        }, 100); // Adjust the delay as needed
-    }
+    setTimeout(() => {
+        // Call animate again on the next frame
+        requestAnimationFrame(animate);
+    }, 100); // Adjust the delay as needed
+
 }
 
 init();

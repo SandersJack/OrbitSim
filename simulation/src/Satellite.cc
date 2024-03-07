@@ -42,7 +42,7 @@ void Satellite::NextStep() {
         if(fStart){
             fPosition.SetX(fBody->GetPosition().GetX() + fOrbitRadius*cos(fBody->GetAngle()));
             fPosition.SetY(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
-            fPosition.SetZ(fBody->GetPosition().GetY() + fOrbitRadius*sin(fBody->GetAngle()));
+            fPosition.SetZ(fBody->GetPosition().GetZ() + fOrbitRadius*sin(fBody->GetAngle()));
             fVelocity = Vector3D(fBody->GetVelocity());
 
             fVelocity.AddX(-fDeltaV*sin(fBody->GetAngle()));
