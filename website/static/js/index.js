@@ -133,7 +133,7 @@ function init() {
             legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${planetName}</span></div>`;
         }
         );
-
+        let count = 0;
         jsonData.simulation.time_steps[0].satellites.forEach(
             (satelliteData, index) => {
                 const color = new THREE.Color(satelliteColor[index]);
@@ -156,11 +156,12 @@ function init() {
                 //console.log(planetData.x, planetData.x);
                 satellites.push(satellite);
                 scene.add(satellite);
-                    
-                legendElement.innerHTML += `<div><span style="color: #${color.getHexString()};">${satellitesName}</span></div>`;
+                
+                count += 1;
+                
             }
             );
-
+        legendElement.innerHTML += `<div><span style="color: #ffffff;">Satellite0-${count}</span></div>`;
         // Start the animation loop
         initializeTrails();
         animate();
