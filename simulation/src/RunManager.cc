@@ -46,8 +46,8 @@ void RunManager::Init() {
     Planets *b = conv->GetPlanetFunc(plan);
     if (atr_iter != fPlanetAtrMap.end() )
     {
-      Vector3D pos = Vector3D(atr_iter->second[0] * AU, atr_iter->second[1] * AU, 0); // , atr_iter->second[2] * AU);
-      Vector3D vel = Vector3D(atr_iter->second[3], atr_iter->second[4], 0); // atr_iter->second[5] * AU);
+      Vector3D pos = Vector3D(atr_iter->second[0] * AU, atr_iter->second[1] * AU, atr_iter->second[2] * AU);
+      Vector3D vel = Vector3D(atr_iter->second[3], atr_iter->second[4], atr_iter->second[5]);
       b->SetPosition(pos);
       b->SetVelocity(vel);
     }

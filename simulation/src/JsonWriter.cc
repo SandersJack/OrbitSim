@@ -57,7 +57,7 @@ void JsonWriter::addCelestialObjects(const std::vector<T*>& celestialObjects){
         fjsonContent_ += "      \"name\": \"" + name + "\",";
         fjsonContent_ += "      \"x\": " + std::to_string(celestialObject->GetPosition().GetX()) + ",";
         fjsonContent_ += "      \"y\": " + std::to_string(celestialObject->GetPosition().GetY()) + ",";
-        fjsonContent_ += "      \"z\": " + std::to_string(celestialObject->GetPosition().GetY());
+        fjsonContent_ += "      \"z\": " + std::to_string(celestialObject->GetPosition().GetZ());
         fjsonContent_ += "    }";
 
         // Check if it's not the last element before adding a comma

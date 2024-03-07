@@ -43,14 +43,16 @@ function initializeTrails() {
     for (let i = 0; i < numSatellites; i++) {
         const randomColor = 0xffffff;
         satelliteColor.push(randomColor)
-        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 0)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].satellites[i].x * 1e-10, jsonData.simulation.time_steps[0].satellites[i].y  * 1e-10, 
+            jsonData.simulation.time_steps[0].planets[i].z  * 1e-10)
         trails_sat.push(createTrail(randomColor, spos));
     }
 
     const numPlanets = jsonData.simulation.time_steps[0].planets.length;
     for (let i = 0; i < numPlanets; i++) {
         const color = planetColors[i];
-        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 0)
+        let spos = new THREE.Vector3(jsonData.simulation.time_steps[0].planets[i].x * 1e-10, jsonData.simulation.time_steps[0].planets[i].y  * 1e-10, 
+            jsonData.simulation.time_steps[0].planets[i].z  * 1e-10)
         trails.push(createTrail(color, spos)); 
     }
 }
@@ -146,7 +148,7 @@ function init() {
                 satellite.position.set(
                     satelliteData.x * 1e-10,
                     satelliteData.y * 1e-10,
-                    0
+                    satelliteData.z * 1e-10
                 );
     
                 satellite.material.color = color;
