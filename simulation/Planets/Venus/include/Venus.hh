@@ -15,7 +15,6 @@ class Venus: public Planets {
         void Init();
         void PrintPos();
 
-        virtual Vector3D ComputeAcceleration();
 };
 
 #endif

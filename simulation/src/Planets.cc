@@ -1,21 +1,12 @@
 #include "Planets.hh"
+#include "PhysicsEqs.hh"
+#include "RunManager.hh"
 
 Planets::Planets():fMass(0), fdt(0) , fTime(0), fRadius(0){
 
 }
 
 Planets::~Planets(){}
-
-void Planets::NextStep() {
-    // Velocity-Verlet (kick-drift-kick) in inertial heliocentric coordinates.
-    Vector3D a0 = ComputeAcceleration();
-    Vector3D v_half = fVelocity + a0 * (fdt * 0.5);
-    fPosition = fPosition + v_half * fdt;
-    Vector3D a1 = ComputeAcceleration();
-    fVelocity = v_half + a1 * (fdt * 0.5);
-    fAcceleration = a1;
-    fTime += fdt;
-}
 
 double Planets::GetAngle(){
 
@@ -29,4 +20,33 @@ double Planets::GetAngle(){
         return angle +  M_PI;
     }
 
+}
+
+Vector3D Planets::ComputeAcceleration() {
+    PhysicsEqs *physics = PhysicsEqs::GetInstance();
+    Vector3D sun(0, 0, 0);
+    const double sun_mass = 1.989e30;
+
+    Vector3D acc = physics->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
+
+    for (Planets *other : RunManager::GetInstance()->GetPlanetList()) {
+        if (other == this) continue;
+        Vector3D d = physics->GetAcceleration(fPosition, other->GetPosition(), fMass, other->GetMass(), 0.1);
+        acc.AddX(d.GetX());
+        acc.AddY(d.GetY());
+        acc.AddZ(d.GetZ());
+    }
+    return acc;
+}
+
+void Planets::KickHalf() {
+    fVelocity = fVelocity + fAcceleration * (fdt * 0.5);
+}
+
+void Planets::Drift() {
+    fPosition = fPosition + fVelocity * fdt;
+}
+
+void Planets::RecomputeAcceleration() {
+    fAcceleration = ComputeAcceleration();
 }

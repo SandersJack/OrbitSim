@@ -29,8 +29,12 @@ class Planets {
 
         void SetTimeStep(double val){ fdt = val;}
 
-        virtual Vector3D ComputeAcceleration() = 0;
-        virtual void NextStep();
+        // Lockstep velocity-Verlet phases. RunManager calls these across all
+        // bodies so accelerations remain self-consistent under mutual gravity.
+        virtual Vector3D ComputeAcceleration();
+        void KickHalf();
+        void Drift();
+        void RecomputeAcceleration();
 
     public:
         Vector3D fPosition;

@@ -20,11 +20,13 @@ void Moon::Init(){
 }
 
 Vector3D Moon::ComputeAcceleration(){
-    // Moon state stays geocentric until full n-body lockstep lands (#15).
-    // The Sun term is the tidal differential, a_sun_on_moon - a_sun_on_earth,
-    // computed in the inertial frame from heliocentric positions.
+    // Moon stays geocentric: in heliocentric coords its Sun-driven dv per
+    // step is ~500 m/s (much larger than the 1 km/s orbital velocity), and
+    // tiny mis-cancellation against Earth's nearly-identical Sun pull
+    // distorts the orbit. The tidal formulation works with the small
+    // a_sun_on_moon - a_sun_on_earth differential directly.
     Vector3D origin(0, 0, 0);
-    double sun_mass = 1.989e30;
+    const double sun_mass = 1.989e30;
     PhysicsEqs *physics = PhysicsEqs::GetInstance();
 
     Vector3D helio_moon = fPosition + fBody->GetPosition();

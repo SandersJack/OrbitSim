@@ -17,11 +17,6 @@ void Venus::Init(){
     fName = "Venus";
 }
 
-Vector3D Venus::ComputeAcceleration(){
-    Vector3D sun(0, 0, 0);
-    double sun_mass = 1.989e30;
-    return PhysicsEqs::GetInstance()->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-}
 
 void Venus::PrintPos(){
     //std::cout << fPosition->GetX() << " " << fPosition->GetY() << " " << fPosition->GetZ() << std::endl;

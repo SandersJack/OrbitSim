@@ -17,11 +17,6 @@ void Uranus::Init(){
     fName = "Uranus";
 }
 
-Vector3D Uranus::ComputeAcceleration(){
-    Vector3D sun(0, 0, 0);
-    double sun_mass = 1.989e30;
-    return PhysicsEqs::GetInstance()->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-}
 
 void Uranus::PrintPos(){
     //std::cout << fPosition->GetX() << " " << fPosition->GetY() << " " << fPosition->GetZ() << std::endl;

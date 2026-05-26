@@ -31,7 +31,9 @@ class Moons {
         void SetBody(Planets *val) {fBody = val;}
 
         virtual Vector3D ComputeAcceleration() = 0;
-        virtual void NextStep();
+        void KickHalf();
+        void Drift();
+        void RecomputeAcceleration();
 
     public:
 

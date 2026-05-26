@@ -106,10 +106,13 @@ void RunManager::Init() {
     fIOManager->Init();
     fIOManager->InitBranches();
   }
-  
+
 
   fHelper = new OrbitHelper();
 
+  // Seed accelerations at t=0 so the first KickHalf uses real values.
+  for (Planets *p : fPlanets) p->RecomputeAcceleration();
+  for (Moons *m : fMoons) m->RecomputeAcceleration();
 }
 
 void RunManager::Run() {
@@ -117,16 +120,26 @@ void RunManager::Run() {
 
   double t = 0;
 
-  // Step the Simualtion by Dt
+  // Step the Simualtion by Dt — lockstep velocity-Verlet (KDK).
   for (int i=0; i*fdt < fStopTime*24*60*60; i++){
-    for(Planets *p : fPlanets){
-      p->NextStep();
-    }
+    // First half-kick: v += a * dt/2 using last step's stored acceleration.
+    for(Planets *p : fPlanets) p->KickHalf();
+    for(Moons *m : fMoons) m->KickHalf();
 
-    for(Moons *m : fMoons){
-      m->NextStep();
-    }
+    // Drift: r += v * dt.
+    for(Planets *p : fPlanets) p->Drift();
+    for(Moons *m : fMoons) m->Drift();
 
+    // Recompute accelerations at the new positions, with every body
+    // already at t+dt so mutual-gravity terms are self-consistent.
+    for(Planets *p : fPlanets) p->RecomputeAcceleration();
+    for(Moons *m : fMoons) m->RecomputeAcceleration();
+
+    // Second half-kick: v += a * dt/2 with the fresh acceleration.
+    for(Planets *p : fPlanets) p->KickHalf();
+    for(Moons *m : fMoons) m->KickHalf();
+
+    // Satellites integrate against the now-finalised planet state.
     for(Satellite *s : fSatellites){
       s->NextStep();
     }
