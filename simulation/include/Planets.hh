@@ -25,6 +25,9 @@ class Planets {
         double GetRadius() {return fRadius;}
         std::string GetName() const { return fName; }
 
+        // Hill/SOI sphere radius; valid once fPosition and fMass are set.
+        double GetSphereOfInfluenceRadius() const;
+
         double GetAngle();
 
         void SetTimeStep(double val){ fdt = val;}

@@ -69,12 +69,6 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::
     // Calc for Planets
     for(Planets *p : fPlanets){
 
-      std::string name = p->GetName();
-
-      if(name == bodyStartName && stepsSinceLaunch < 11){
-        continue; //Ignore start body for 10 steps after launch
-      }
-        
       double dx_n = (pos1.GetX() - p->GetPosition().GetX());
       double dy_n = (pos1.GetY() - p->GetPosition().GetY());
       double dz_n = (pos1.GetZ() - p->GetPosition().GetZ());

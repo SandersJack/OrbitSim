@@ -8,26 +8,24 @@ Satellite::Satellite():fMass(0), fdt(0) , fTime(0), fName("c"), fStartAngle(-1),
 
 Satellite::~Satellite(){}
 
-void Satellite::SetStartPosition(double body_radius, Vector3D body_val, double sat_val){
-
-    fInclination = 0;
-    fLongitude = 180 * M_PI / 180.0;
-    fOrbitRadius = body_radius + sat_val * 1e3;
-    fPosition = Vector3D();
-    fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + body_val.GetX());
-    fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + body_val.GetY());
-    fPosition.SetZ(fOrbitRadius * sin(fInclination) + body_val.GetZ());
-
+void Satellite::SetStartPosition(double /*body_radius*/, Vector3D /*body_val*/, double sat_val){
+    // Legacy OrbitHeight is retained in fOrbitRadius for any callers that
+    // want the LEO-altitude semantics, but launch is now patched-conic so the
+    // actual release distance is the body's sphere of influence.
+    fOrbitRadius = sat_val * 1e3;
     fStepsSinceLaunch = 0;
-
 }
 
-void Satellite::SetStartVelocity(Vector3D body_val, double sat_val){
-
-    fVelocity = Vector3D(body_val);
+void Satellite::SetStartVelocity(Vector3D /*body_val*/, double sat_val){
+    // sat_val is interpreted as v_infinity (hyperbolic excess) in m/s.
     fDeltaV = sat_val;
 }
 
+static Vector3D ProgradeUnit(const Vector3D &v) {
+    Vector3D u = v;
+    u.Normalize();
+    return u;
+}
 
 void Satellite::NextStep() {
 
@@ -36,26 +34,27 @@ void Satellite::NextStep() {
         exit(1);
     }
 
+    // Patched-conic release: launch position sits at the body's sphere of
+    // influence, in the body's prograde direction. At that distance the body's
+    // gravity is balanced by the Sun's, so the full n-body integrator picks
+    // the trajectory up cleanly with no per-step exclusion.
+    const double r_soi = fBody->GetSphereOfInfluenceRadius();
+    Vector3D prograde = ProgradeUnit(fBody->GetVelocity());
+    Vector3D parked = fBody->GetPosition() + prograde * r_soi;
+
     bool waiting_to_launch =
         (fBody->GetAngle() * 180 / M_PI < fStartAngle && fStart && fStartAngle != -1) ||
         (fTime < fStartTime && fStart && fStartTime != -1);
 
     if (waiting_to_launch) {
-        // Park the satellite on the body's surface (radial line to Sun) until launch.
-        Vector3D direction_to_sun = fBody->GetPosition();
-        direction_to_sun.Normalize();
-        fPosition = fBody->GetPosition() + direction_to_sun * fOrbitRadius;
+        // Track the body's SOI in lockstep until the launch trigger fires.
+        fPosition = parked;
+        fVelocity = fBody->GetVelocity();
     } else {
         if (fStart) {
-            // Launch: place on surface, inherit body velocity, apply DeltaV along velocity direction.
-            Vector3D direction_to_sun = fBody->GetPosition();
-            direction_to_sun.Normalize();
-            fPosition = fBody->GetPosition() + direction_to_sun * fOrbitRadius;
-
-            fVelocity = Vector3D(fBody->GetVelocity());
-            Vector3D direction = fVelocity;
-            direction.Normalize();
-            fVelocity.Add(direction.Multiply(fDeltaV));
+            // Release with v_infinity along the body's prograde direction.
+            fPosition = parked;
+            fVelocity = fBody->GetVelocity() + prograde * fDeltaV;
             fStart = false;
         }
 

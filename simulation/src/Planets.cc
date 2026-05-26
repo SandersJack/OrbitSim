@@ -8,6 +8,14 @@ Planets::Planets():fMass(0), fdt(0) , fTime(0), fRadius(0){
 
 Planets::~Planets(){}
 
+double Planets::GetSphereOfInfluenceRadius() const {
+    constexpr double sun_mass = 1.989e30;
+    const double r = std::sqrt(fPosition.fx * fPosition.fx +
+                               fPosition.fy * fPosition.fy +
+                               fPosition.fz * fPosition.fz);
+    return r * std::pow(fMass / sun_mass, 0.4);
+}
+
 double Planets::GetAngle(){
 
     double angle = atan(fPosition.GetY()/fPosition.GetX());
