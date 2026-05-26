@@ -16,13 +16,7 @@ class Moon: public Moons {
         void Init();
         void PrintPos();
 
-        virtual void NextStep();
-
-        Vector3D GetSunPosition() const { return fSunPosition; }
-
-    private:
-
-        Vector3D fSunPosition;
+        virtual Vector3D ComputeAcceleration();
 };
 
 #endif

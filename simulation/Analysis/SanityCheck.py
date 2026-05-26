@@ -55,8 +55,10 @@ def main(path: str) -> None:
                 continue
             summarise(name, grp["position"][:], AU, "AU")
 
+        # Moon state is stored geocentric (relative to its parent), so distance
+        # from origin already equals distance from parent body.
         if "Moons" in f:
-            print("\nMoons (geocentric for Moon):")
+            print("\nMoons (geocentric, distance from parent body):")
             for name, grp in f["Moons"].items():
                 summarise(name, grp["position"][:], 1e3, "km")
 

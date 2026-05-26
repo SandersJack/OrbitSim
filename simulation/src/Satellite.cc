@@ -36,67 +36,41 @@ void Satellite::NextStep() {
         exit(1);
     }
 
-    if((fBody->GetAngle() *180 / M_PI < fStartAngle && fStart && fStartAngle != -1) || (fTime < fStartTime && fStart && fStartTime != -1)){
+    bool waiting_to_launch =
+        (fBody->GetAngle() * 180 / M_PI < fStartAngle && fStart && fStartAngle != -1) ||
+        (fTime < fStartTime && fStart && fStartTime != -1);
 
-        Vector3D direction_to_earth = fBody->GetPosition();
-        direction_to_earth.Normalize();
-
-        Vector3D satellite_position = fBody->GetPosition() + direction_to_earth * (fOrbitRadius);
-
-        fPosition = satellite_position;
-
-        /*
-        fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
-        fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
-        fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
-        */
+    if (waiting_to_launch) {
+        // Park the satellite on the body's surface (radial line to Sun) until launch.
+        Vector3D direction_to_sun = fBody->GetPosition();
+        direction_to_sun.Normalize();
+        fPosition = fBody->GetPosition() + direction_to_sun * fOrbitRadius;
     } else {
-        if(fStart){
+        if (fStart) {
+            // Launch: place on surface, inherit body velocity, apply DeltaV along velocity direction.
+            Vector3D direction_to_sun = fBody->GetPosition();
+            direction_to_sun.Normalize();
+            fPosition = fBody->GetPosition() + direction_to_sun * fOrbitRadius;
 
-            Vector3D direction_to_earth = fBody->GetPosition();
-            direction_to_earth.Normalize();
-
-            Vector3D satellite_position = fBody->GetPosition() + direction_to_earth * (fOrbitRadius);
-
-            fPosition = satellite_position;
-
-            /*
-            fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + fBody->GetPosition().GetX());
-            fPosition.SetY(fOrbitRadius * cos(fInclination) * sin(fLongitude) + fBody->GetPosition().GetY());
-            fPosition.SetZ(fOrbitRadius * sin(fInclination) + fBody->GetPosition().GetZ());
-            */
             fVelocity = Vector3D(fBody->GetVelocity());
-
             Vector3D direction = fVelocity;
             direction.Normalize();
-
-            // Scale the velocity vector
             fVelocity.Add(direction.Multiply(fDeltaV));
-            fStart=false;
+            fStart = false;
         }
 
-        PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
+        // Velocity-Verlet step, matching the planet/moon integrator.
+        PhysicsEqs *physics = PhysicsEqs::GetInstance();
+        const std::string &launch_body = fBody->GetName();
 
-        std::pair<Vector3D, Vector3D> out = PhysicsEqs->RungeKuttaStep(fPosition, fVelocity, fMass, fdt, fBody->GetName(), fStepsSinceLaunch);
+        Vector3D a0 = physics->GetSatelliteAcceleration(fPosition, fMass, launch_body, fStepsSinceLaunch);
+        Vector3D v_half = fVelocity + a0 * (fdt * 0.5);
+        fPosition = fPosition + v_half * fdt;
+        Vector3D a1 = physics->GetSatelliteAcceleration(fPosition, fMass, launch_body, fStepsSinceLaunch + 1);
+        fVelocity = v_half + a1 * (fdt * 0.5);
+        fAcceleration = a1;
 
-        fPosition = out.first;
-        fVelocity = out.second;
-
-        /*
-        Vector3D Sat_a = PhysicsEqs->GetSatelliteAcceleration(fPosition, fMass);
-
-        fAcceleration = Sat_a;
-
-        fVelocity.AddX(Sat_a.GetX()*fdt);
-        fVelocity.AddY(Sat_a.GetY()*fdt);
-        fVelocity.AddZ(Sat_a.GetZ()*fdt);
-
-        fPosition.AddX(fVelocity.GetX()*fdt);
-        fPosition.AddY(fVelocity.GetY()*fdt);
-        fPosition.AddZ(fVelocity.GetZ()*fdt);
-        */
-
-        fStepsSinceLaunch++; 
+        fStepsSinceLaunch++;
     }
     fTime += fdt;
 }

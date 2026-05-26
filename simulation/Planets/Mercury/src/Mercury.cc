@@ -17,27 +17,10 @@ void Mercury::Init(){
     fName = "Mercury";
 }
 
-void Mercury::NextStep(){
-    
-    PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
-
-    Vector3D *sun = new Vector3D(0,0,0);
+Vector3D Mercury::ComputeAcceleration(){
+    Vector3D sun(0, 0, 0);
     double sun_mass = 1.989e30;
-    
-    Vector3D Mercury_a = PhysicsEqs->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-
-    fAcceleration = Mercury_a;
-
-    fVelocity.AddX(Mercury_a.GetX()*fdt);
-    fVelocity.AddY(Mercury_a.GetY()*fdt);
-    fVelocity.AddZ(Mercury_a.GetZ()*fdt);
-
-    fPosition.AddX(fVelocity.GetX()*fdt);
-    fPosition.AddY(fVelocity.GetY()*fdt);
-    fPosition.AddZ(fVelocity.GetZ()*fdt);
-
-    fTime += fdt;
-    
+    return PhysicsEqs::GetInstance()->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
 }
 
 void Mercury::PrintPos(){

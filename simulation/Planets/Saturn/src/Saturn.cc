@@ -17,27 +17,10 @@ void Saturn::Init(){
     fName = "Saturn";
 }
 
-void Saturn::NextStep(){
-    
-    PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
-
-    Vector3D *sun = new Vector3D(0,0,0);
+Vector3D Saturn::ComputeAcceleration(){
+    Vector3D sun(0, 0, 0);
     double sun_mass = 1.989e30;
-    
-    Vector3D Saturn_a = PhysicsEqs->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-
-    fAcceleration = Saturn_a;
-
-    fVelocity.AddX(Saturn_a.GetX()*fdt);
-    fVelocity.AddY(Saturn_a.GetY()*fdt);
-    fVelocity.AddZ(Saturn_a.GetZ()*fdt);
-
-    fPosition.AddX(fVelocity.GetX()*fdt);
-    fPosition.AddY(fVelocity.GetY()*fdt);
-    fPosition.AddZ(fVelocity.GetZ()*fdt);
-
-    fTime += fdt;
-    
+    return PhysicsEqs::GetInstance()->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
 }
 
 void Saturn::PrintPos(){

@@ -94,34 +94,3 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::
     return acc_1;
 }
 
-std::pair<Vector3D, Vector3D> PhysicsEqs::RungeKuttaStep(Vector3D position, Vector3D velocity, double mass, double dt, std::string bodyStartName, int stepsSinceLaunch) {
-    // Initial acceleration
-    Vector3D k1 = GetSatelliteAcceleration(position, mass, bodyStartName, stepsSinceLaunch);
-
-    // Update position and velocity using k1
-    Vector3D pos_k2 = position + velocity * (dt / 2.0);
-    Vector3D vel_k2 = velocity + k1 * (dt / 2.0);
-    
-    // Calculate acceleration at pos_k2
-    Vector3D k2 = GetSatelliteAcceleration(pos_k2, mass, bodyStartName, stepsSinceLaunch);
-
-    // Update position and velocity using k2
-    Vector3D pos_k3 = position + vel_k2 * (dt / 2.0);
-    Vector3D vel_k3 = velocity + k2 * (dt / 2.0);
-    
-    // Calculate acceleration at pos_k3
-    Vector3D k3 = GetSatelliteAcceleration(pos_k3, mass, bodyStartName, stepsSinceLaunch);
-
-    // Update position and velocity using k3
-    Vector3D pos_k4 = position + vel_k3 * dt;
-    Vector3D vel_k4 = velocity + k3 * dt;
-    
-    // Calculate acceleration at pos_k4
-    Vector3D k4 = GetSatelliteAcceleration(pos_k4, mass, bodyStartName, stepsSinceLaunch);
-
-    // Combine results using weighted averages
-    Vector3D newPos = position + (velocity + vel_k2 * 2.0 + vel_k3 * 2.0 + vel_k4) * (dt / 6.0);
-    Vector3D newVel = velocity + (k1 + k2 * 2.0 + k3 * 2.0 + k4) * (dt / 6.0);
-
-    return std::make_pair(newPos, newVel);
-}

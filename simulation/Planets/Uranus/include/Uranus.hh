@@ -15,7 +15,7 @@ class Uranus: public Planets {
         void Init();
         void PrintPos();
 
-        virtual void NextStep();
+        virtual Vector3D ComputeAcceleration();
 };
 
 #endif

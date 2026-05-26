@@ -29,7 +29,8 @@ class Planets {
 
         void SetTimeStep(double val){ fdt = val;}
 
-        virtual void NextStep() = 0;
+        virtual Vector3D ComputeAcceleration() = 0;
+        virtual void NextStep();
 
     public:
         Vector3D fPosition;

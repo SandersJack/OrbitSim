@@ -17,27 +17,10 @@ void Venus::Init(){
     fName = "Venus";
 }
 
-void Venus::NextStep(){
-    
-    PhysicsEqs *PhysicsEqs = PhysicsEqs::GetInstance();
-
-    Vector3D *sun = new Vector3D(0,0,0);
+Vector3D Venus::ComputeAcceleration(){
+    Vector3D sun(0, 0, 0);
     double sun_mass = 1.989e30;
-    
-    Vector3D Venus_a = PhysicsEqs->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-
-    fAcceleration = Venus_a;
-
-    fVelocity.AddX(Venus_a.GetX()*fdt);
-    fVelocity.AddY(Venus_a.GetY()*fdt);
-    fVelocity.AddZ(Venus_a.GetZ()*fdt);
-
-    fPosition.AddX(fVelocity.GetX()*fdt);
-    fPosition.AddY(fVelocity.GetY()*fdt);
-    fPosition.AddZ(fVelocity.GetZ()*fdt);
-
-    fTime += fdt;
-    
+    return PhysicsEqs::GetInstance()->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
 }
 
 void Venus::PrintPos(){

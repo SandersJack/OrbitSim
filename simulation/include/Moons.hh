@@ -30,7 +30,8 @@ class Moons {
 
         void SetBody(Planets *val) {fBody = val;}
 
-        virtual void NextStep() = 0;
+        virtual Vector3D ComputeAcceleration() = 0;
+        virtual void NextStep();
 
     public:
 
