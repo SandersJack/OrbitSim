@@ -1,4 +1,5 @@
 **.root
+**.h5
 **/build
 **/.venv
 **.json

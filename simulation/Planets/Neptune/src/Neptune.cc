@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Neptune)
-
 Neptune::Neptune() {
     Init();
 }
@@ -16,6 +14,7 @@ void Neptune::Init(){
     NeptuneParameters *EParam = NeptuneParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Neptune";
 }
 
 void Neptune::NextStep(){

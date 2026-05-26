@@ -4,7 +4,6 @@
 #include "Planets.hh"
 #include "EarthParameters.hh"
 #include "PhysicsEqs.hh"
-#include "TTree.h"
 #include "Vector3D.hh"
 
 
@@ -14,17 +13,9 @@ class Earth: public Planets {
         ~Earth();
 
         void Init();
-        void InitRootIO(TTree *t_main);
         void PrintPos();
-        
+
         virtual void NextStep();
-
-        ClassDef(Earth,1);
-
-    private:
-
-
-    
 };
 
 #endif

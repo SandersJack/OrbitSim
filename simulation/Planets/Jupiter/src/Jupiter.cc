@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Jupiter)
-
 Jupiter::Jupiter() {
     Init();
 }
@@ -16,6 +14,7 @@ void Jupiter::Init(){
     JupiterParameters *EParam = JupiterParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Jupiter";
 }
 
 void Jupiter::NextStep(){

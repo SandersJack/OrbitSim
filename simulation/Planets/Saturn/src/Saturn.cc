@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Saturn)
-
 Saturn::Saturn() {
     Init();
 }
@@ -16,6 +14,7 @@ void Saturn::Init(){
     SaturnParameters *EParam = SaturnParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Saturn";
 }
 
 void Saturn::NextStep(){

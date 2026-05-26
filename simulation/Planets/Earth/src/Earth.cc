@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Earth)
-
 Earth::Earth() {
     Init();
 }
@@ -16,6 +14,7 @@ void Earth::Init(){
     EarthParameters *EParam = EarthParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Earth";
 }
 
 void Earth::NextStep(){

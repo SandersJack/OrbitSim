@@ -3,8 +3,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Moon)
-
 Moon::Moon() {
     Init();
 }
@@ -18,6 +16,7 @@ void Moon::Init(){
     fMass = EParam->GetMass();
     fPosition = Vector3D(EParam->GetStartPos());
     fVelocity = Vector3D(EParam->GetStartVel());
+    fName = "Moon";
 }
 
 void Moon::NextStep(){

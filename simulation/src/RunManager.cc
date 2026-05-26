@@ -102,10 +102,10 @@ void RunManager::Init() {
     fWebIOManager = WebIO::GetInstance();
     fWebIOManager->Init();
   } else {
-    fIOManager = RootIO::GetInstance();
+    fIOManager = Hdf5IO::GetInstance();
     fIOManager->Init();
     fIOManager->InitBranches();
-  } 
+  }
   
 
   fHelper = new OrbitHelper();
@@ -135,7 +135,7 @@ void RunManager::Run() {
 
     int fDisplayPeriod = 100;
     if(i % fDisplayPeriod == 0) {
-    std::pair<Double_t, Double_t> memoryUsage = fHelper->GetMemoryUsage();
+    std::pair<double, double> memoryUsage = fHelper->GetMemoryUsage();
     std::cout << "[" << fHelper->TimeString() << "] Running Day "
               << double(i*fdt)/(24*60*60)
               << " [Memory usage -> Virtual: " << memoryUsage.first
@@ -150,7 +150,7 @@ void RunManager::Run() {
       }
       fWebIOManager->SaveStep(t, last);
     } else {
-      fIOManager->SaveStep();
+      fIOManager->SaveStep(t);
     }
 
   }

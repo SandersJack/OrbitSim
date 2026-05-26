@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Mercury)
-
 Mercury::Mercury() {
     Init();
 }
@@ -16,6 +14,7 @@ void Mercury::Init(){
     MercuryParameters *EParam = MercuryParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Mercury";
 }
 
 void Mercury::NextStep(){

@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Venus)
-
 Venus::Venus() {
     Init();
 }
@@ -16,6 +14,7 @@ void Venus::Init(){
     VenusParameters *EParam = VenusParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Venus";
 }
 
 void Venus::NextStep(){

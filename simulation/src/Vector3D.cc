@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-ClassImp(Vector3D)
-
 Vector3D::Vector3D(): fx(0), fy(0), fz(0) {
 
 }

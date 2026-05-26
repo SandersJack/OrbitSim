@@ -1,42 +1,40 @@
 cmake_minimum_required(VERSION 3.20)
 
 include(CMakePrintHelpers)
+include(FetchContent)
 
-project(OrbitSim)
+project(OrbitSim CXX)
 
-find_package(ROOT REQUIRED COMPONENTS RIO)
-if( ${ROOT_FOUND} )
-    include(${ROOT_USE_FILE})
-    message (STATUS "Found ROOT ${ROOT_VERSION} at ${ROOT_DIR}")
-else()
-    message (FATAL_ERROR "ROOT not found")
-endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(HDF5 REQUIRED COMPONENTS C)
+message(STATUS "Found HDF5 ${HDF5_VERSION} at ${HDF5_INCLUDE_DIRS}")
+
+FetchContent_Declare(
+    HighFive
+    GIT_REPOSITORY https://github.com/BlueBrain/HighFive.git
+    GIT_TAG v2.10.0
+)
+set(HIGHFIVE_USE_BOOST OFF CACHE BOOL "" FORCE)
+set(HIGHFIVE_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(HIGHFIVE_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(HIGHFIVE_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(HighFive)
 
 set(CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/")
 set(EXECUTABLE_OUTPUT_PATH ".")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-message(LIB="${LIBRARY_OUTPUT_PATH}")
 
-include_directories(${ROOT_INCLUDE_DIR})
-link_directories(${ROOT_LIBRARY_DIR})
-
-file(GLOB SRC
-     "src/*.cc")
-
+file(GLOB SRC "src/*.cc")
 set(MAIN_FILE Orbits.cc)
 include_directories(include)
 
-
 add_executable(OrbitSim ${MAIN_FILE} ${SRC})
 
-target_link_libraries(OrbitSim ROOT::RIO)   
-target_link_libraries(OrbitSim ${ROOT_LIBRARIES} )
-
-ROOT_GENERATE_DICTIONARY(Vector3DDict Vector3D.hh Planets.hh Satellite.hh Moons.hh MODULE OrbitSim LINKDEF LinkDef.h)
-target_include_directories(Vector3DDict PUBLIC "include/")
-add_library(myLib SHARED src/Vector3D.cc src/Planets.cc src/Moons.cc src/Satellite.cc)
+add_library(myLib STATIC src/Vector3D.cc src/Planets.cc src/Moons.cc src/Satellite.cc)
 target_link_libraries(${PROJECT_NAME} myLib)
-
+target_link_libraries(${PROJECT_NAME} HighFive)
 
 include_directories("Parameters/include")
 target_link_libraries(${PROJECT_NAME} Parameters)
@@ -48,15 +46,9 @@ list(TRANSFORM PlanetsIncludeDirs PREPEND "Planets/")
 list(TRANSFORM PlanetsIncludeDirs APPEND "/include")
 include_directories(${PlanetsIncludeDirs})
 
-
 add_subdirectory(Planets)
 
 message(STATUS "Building Planets: ")
-foreach(Planets ${PlanetsList})
-    message(STATUS "${Planets}")
-    ADD_CUSTOM_TARGET(${Planets}_rdict_target ALL
-        COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_BINARY_DIR}Planets/${Planets}/lib${Planets}Persistency_rdict.pcm" "${CMAKE_CURRENT_BINARY_DIR}/lib${Planets}Persistency_rdict.pcm")
-
-    ADD_CUSTOM_TARGET(${Planets}_rootmap_target ALL
-        COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_BINARY_DIR}Planets/${Planets}/lib${Planets}Persistency.rootmap" "${CMAKE_CURRENT_BINARY_DIR}/lib${Planets}Persistency.rootmap")
+foreach(Planet ${PlanetsList})
+    message(STATUS "${Planet}")
 endforeach()

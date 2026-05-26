@@ -3,6 +3,9 @@
 
 #include "Vector3D.hh"
 
+#include <string>
+#include <utility>
+
 class PhysicsEqs{
 
     public:

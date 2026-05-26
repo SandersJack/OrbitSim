@@ -1,26 +1,28 @@
 #ifndef Moons_H
-#define Moons_H 
+#define Moons_H
 
 #include "Planets.hh"
-#include "TObject.h"
 #include "Vector3D.hh"
 #include <cmath>
+#include <string>
 
-class Moons: public TObject {
+class Moons {
 
     public:
         Moons();
-        ~Moons();
+        virtual ~Moons();
 
         void SetPosition(Vector3D val){ fPosition = val;};
         void SetVelocity(Vector3D val){ fVelocity = val;};
         void SetAcceleration(Vector3D val){ fAcceleration = val;}
         void SetMass(double val){ fMass = val;};
+        void SetName(const std::string &val) { fName = val; }
 
         Vector3D GetPosition(){ return fPosition;}
         Vector3D GetVelocity(){ return fVelocity;}
         Vector3D GetAcceleration(){ return fAcceleration;}
         double GetMass(){return fMass;}
+        std::string GetName() const { return fName; }
 
         double GetAngle(){return atan(fPosition.GetY()/fPosition.GetX());}
 
@@ -42,9 +44,7 @@ class Moons: public TObject {
         double fdt;
         double fTime;
 
-        ClassDef(Moons,1);
-
-
+        std::string fName;
 };
 
 #endif

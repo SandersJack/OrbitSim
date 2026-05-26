@@ -2,8 +2,6 @@
 #include "PhysicsEqs.hh"
 #include <cmath>
 
-ClassImp(Satellite)
-
 Satellite::Satellite():fMass(0), fdt(0) , fTime(0), fName("c"), fStartAngle(-1), fStartTime(-1), fStart(true) {
 
 }

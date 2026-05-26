@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Mars)
-
 Mars::Mars() {
     Init();
 }
@@ -16,6 +14,7 @@ void Mars::Init(){
     MarsParameters *EParam = MarsParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Mars";
 }
 
 void Mars::NextStep(){

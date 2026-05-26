@@ -1,4 +1,4 @@
-foreach(Planets ${PlanetsList})
-  add_subdirectory(${Planets})
-  target_link_libraries(OrbitSim ${Planets}Persistency)
+foreach(Planet ${PlanetsList})
+  add_subdirectory(${Planet})
+  target_link_libraries(OrbitSim ${Planet})
 endforeach()

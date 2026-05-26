@@ -2,8 +2,6 @@
 #include "Vector3D.hh"
 #include <iostream>
 
-ClassImp(Uranus)
-
 Uranus::Uranus() {
     Init();
 }
@@ -16,6 +14,7 @@ void Uranus::Init(){
     UranusParameters *EParam = UranusParameters::GetInstance();
     fMass = EParam->GetMass();
     fRadius = EParam->GetRadius();
+    fName = "Uranus";
 }
 
 void Uranus::NextStep(){

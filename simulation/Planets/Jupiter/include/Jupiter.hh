@@ -4,7 +4,6 @@
 #include "Planets.hh"
 #include "JupiterParameters.hh"
 #include "PhysicsEqs.hh"
-#include "TTree.h"
 #include "Vector3D.hh"
 
 
@@ -14,17 +13,9 @@ class Jupiter: public Planets {
         ~Jupiter();
 
         void Init();
-        void InitRootIO(TTree *t_main);
         void PrintPos();
-        
+
         virtual void NextStep();
-
-        ClassDef(Jupiter,1);
-
-    private:
-
-
-    
 };
 
 #endif

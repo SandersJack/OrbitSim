@@ -1,13 +1,13 @@
 #ifndef Satellite_H
 #define Satellite_H
 
-#include "TObject.h"
 #include "Vector3D.hh"
 #include "Planets.hh"
 #include <cmath>
 #include <iostream>
+#include <string>
 
-class Satellite: public TObject {
+class Satellite {
     public:
         Satellite();
         ~Satellite();
@@ -37,7 +37,7 @@ class Satellite: public TObject {
         void NextStep();
 
     private:
-    
+
         Planets *fBody;
 
         Vector3D fPosition;
@@ -60,8 +60,6 @@ class Satellite: public TObject {
 
 
         std::string fName;
-
-        ClassDef(Satellite,1);
 };
 
 #endif

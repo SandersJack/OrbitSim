@@ -5,9 +5,7 @@
 #include "Earth.hh"
 #include "MoonParameters.hh"
 #include "PhysicsEqs.hh"
-#include "TTree.h"
 #include "Vector3D.hh"
-#include "TObject.h"
 
 
 class Moon: public Moons {
@@ -16,12 +14,11 @@ class Moon: public Moons {
         ~Moon();
 
         void Init();
-        void InitRootIO(TTree *t_main);
         void PrintPos();
-        
+
         virtual void NextStep();
 
-        ClassDef(Moon,1);
+        Vector3D GetSunPosition() const { return fSunPosition; }
 
     private:
 
