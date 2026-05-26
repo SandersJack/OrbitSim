@@ -22,7 +22,7 @@ class Satellite {
         void SetName(std::string val) {fName = val;}
         void SetBody(Planets *val) {fBody = val;}
         void SetStartAngle(double val) {fStartAngle = val;}
-        void SetStartTime(double val) {fStartTime = val*24*50*60;}
+        void SetStartTime(double val) {fStartTime = val*24*60*60;}
 
         Vector3D GetPosition(){ return fPosition;}
         Vector3D GetVelocity(){ return fVelocity;}

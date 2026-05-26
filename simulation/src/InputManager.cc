@@ -126,7 +126,7 @@ void InputManager::ParsePlanetFile(std::string file) {
                     fSatelliteList[Planet].push_back(std::make_pair(Sat,name));
                 }
                 if(t>0){
-                    int inter = std::stod(tokens[t]);
+                    double inter = std::stod(tokens[t]);
                     Atributes.push_back(inter);
                 }
             }

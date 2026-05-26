@@ -85,9 +85,9 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::
 
       double inv_r3 = pow((pow(dx_n,2) + pow(dy_n,2) + pow(dz_n,2) + pow(soft,2)),(-1.5));
       
-      acc_1.AddX(-fG_const * (dx * inv_r3) * p->GetMass());
-      acc_1.AddY(-fG_const * (dy * inv_r3) * p->GetMass());
-      acc_1.AddZ(-fG_const * (dz * inv_r3) * p->GetMass());
+      acc_1.AddX(-fG_const * (dx_n * inv_r3) * p->GetMass());
+      acc_1.AddY(-fG_const * (dy_n * inv_r3) * p->GetMass());
+      acc_1.AddZ(-fG_const * (dz_n * inv_r3) * p->GetMass());
 
     }
 

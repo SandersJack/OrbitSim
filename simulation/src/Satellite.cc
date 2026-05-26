@@ -11,7 +11,7 @@ Satellite::~Satellite(){}
 void Satellite::SetStartPosition(double body_radius, Vector3D body_val, double sat_val){
 
     fInclination = 0;
-    fLongitude = 180;
+    fLongitude = 180 * M_PI / 180.0;
     fOrbitRadius = body_radius + sat_val * 1e3;
     fPosition = Vector3D();
     fPosition.SetX(fOrbitRadius * cos(fInclination) * cos(fLongitude) + body_val.GetX());
