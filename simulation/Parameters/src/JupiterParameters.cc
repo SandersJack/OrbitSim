@@ -25,6 +25,6 @@ void JupiterParameters::Init() {
     //double angle = -268.187 * M_PI/180;
     fStartPos = new Vector3D(3.48246223235037 * fAU, 3.2984718191970486 * fAU, 1.3290673407721432 * fAU);
     fStartVel = new Vector3D(-9478.338380621848, 8888.42379431389, 4040.5961921722296);
-    fMass = 1898.13e24;
+    fMass = 1.898518e+27;  // GM/G with GM_jupiter=1.267128e+17
     fRadius = 71492e3;
 }

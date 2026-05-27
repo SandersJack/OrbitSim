@@ -16,6 +16,7 @@ class Planets {
         void SetVelocity(Vector3D val){ fVelocity = val;};
         void SetAcceleration(Vector3D val){ fAcceleration = val;}
         void SetMass(double val){ fMass = val;};
+        void SetRadius(double val){ fRadius = val; }
         void SetName(const std::string &val) { fName = val; }
 
         Vector3D GetPosition(){ return fPosition;}

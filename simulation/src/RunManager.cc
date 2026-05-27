@@ -86,6 +86,22 @@ void RunManager::Init() {
   }
 
 
+  // Minor bodies (asteroids, dwarf planets, etc.) — config-driven, no
+  // per-body class. Each row becomes a generic Planets instance pushed into
+  // fPlanets so it participates in the n-body integration like everything
+  // else.
+  const double AU_m = AU;
+  for (const auto &body : InputManager::GetInstance()->GetAsteroids()) {
+    Planets *p = new Planets();
+    p->SetName(body.name);
+    p->SetMass(body.mass);
+    p->SetRadius(body.radius);
+    p->SetPosition(Vector3D(body.pos[0] * AU_m, body.pos[1] * AU_m, body.pos[2] * AU_m));
+    p->SetVelocity(Vector3D(body.vel[0],        body.vel[1],        body.vel[2]));
+    fPlanets.push_back(p);
+    std::cout << "[RunManager] minor body: " << body.name << std::endl;
+  }
+
   for(Planets *p : fPlanets){
     p->SetTimeStep(fdt);
   }

@@ -25,6 +25,6 @@ void SaturnParameters::Init() {
     double angle = -190.51 * M_PI/180;
     fStartPos = new Vector3D(r*fAU*cos(angle),r*fAU*sin(angle),0);
     fStartVel = new Vector3D(-v*sin(angle),v*cos(angle),0);
-    fMass = 568.32e24;
+    fMass = 5.684586e+26;  // GM/G with GM_saturn=3.794063e+16
     fRadius = 60268e3;
 }

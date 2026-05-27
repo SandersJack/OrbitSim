@@ -25,6 +25,6 @@ void UranusParameters::Init() {
     double angle = -112.24 * M_PI/180;
     fStartPos = new Vector3D(r*fAU*cos(angle),r*fAU*sin(angle),0);
     fStartVel = new Vector3D(-v*sin(angle),v*cos(angle),0);
-    fMass = 86.811e24;
+    fMass = 8.681894e+25;  // GM/G with GM_uranus=5.794556e+15
     fRadius = 25559e3;
 }

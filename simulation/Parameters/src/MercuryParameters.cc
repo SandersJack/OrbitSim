@@ -25,6 +25,6 @@ void MercuryParameters::Init() {
     double angle = -205.48 * M_PI/180;
     fStartPos = new Vector3D(r*fAU*cos(angle),r*fAU*sin(angle),0);
     fStartVel = new Vector3D(-v*sin(angle),v*cos(angle),0);
-    fMass = 0.33010e24;
+    fMass = 3.301020e+23;  // GM/G with GM_mercury=2.203200e+13
     fRadius = 2440.5e3;
 }

@@ -25,6 +25,6 @@ void VenusParameters::Init() {
     double angle = -151.41 * M_PI/180;
     fStartPos = new Vector3D(r*fAU*cos(angle),r*fAU*sin(angle),0);
     fStartVel = new Vector3D(-v*sin(angle),v*cos(angle),0);
-    fMass = 4.8673e24;
+    fMass = 4.867306e+24;  // GM/G with GM_venus=3.248586e+14
     fRadius = 6051.8e3;
 }

@@ -24,6 +24,18 @@ class InputManager {
         std::map<std::string, std::vector<std::pair<std::string, std::string>>> GetSatelliteList(){ return fSatelliteList;}
         std::map<std::string, std::vector<double>> GetSatelliteAtributesList(){ return fSatelliteAtributesList;}
 
+        // Minor bodies (asteroids, dwarf planets, comets) come from their own
+        // config — one line per body, mass + state vectors, no per-body class.
+        void ParseAsteroidFile(std::string file);
+        struct MinorBody {
+            std::string name;
+            double mass;       // kg
+            double radius;     // m (0 if unknown)
+            double pos[3];     // AU, barycentric
+            double vel[3];     // m/s, barycentric
+        };
+        const std::vector<MinorBody>& GetAsteroids() const { return fAsteroids; }
+
     private:
         static InputManager *fInstance;
 
@@ -35,6 +47,7 @@ class InputManager {
         std::map<std::string, std::vector<std::pair<std::string, std::string>>> fSatelliteList;
         std::map<std::string, std::vector<double>> fSatelliteAtributesList;
 
+        std::vector<MinorBody> fAsteroids;
 };
 
 #endif

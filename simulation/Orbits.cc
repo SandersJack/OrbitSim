@@ -10,6 +10,7 @@ int main(int argc, char* argv[]){
     std::string infile = "config/PlanetsList.dat";
     std::string Mooninfile = "config/MoonsList.dat";
     std::string Satinfile = "config/SatelliteList.dat";
+    std::string Astinfile = "config/AsteroidsList.dat";
     double timeStep = 86400; //seconds
     double stopTime = 1000; //days
 
@@ -31,8 +32,13 @@ int main(int argc, char* argv[]){
                 i++;
             }
             if (strcmp(argv[i], "-SatList") == 0) // StopTime
-            {                 
+            {
                 Satinfile = (argv[i + 1]);
+                i++;
+            }
+            if (strcmp(argv[i], "-AstList") == 0) // Asteroid config
+            {
+                Astinfile = (argv[i + 1]);
                 i++;
             }
         }
@@ -48,7 +54,8 @@ int main(int argc, char* argv[]){
                 std::cout << "-Ts <double> : Time step in seconds" << std::endl;
                 std::cout << "-St <double> : Total time in days" << std::endl;
                 std::cout << "-web : Outputs data into web freindly format" << std::endl;
-                std::cout << "-SatList : Input Sat List" << std::endl;
+                std::cout << "-SatList <file> : Satellite config" << std::endl;
+                std::cout << "-AstList <file> : Asteroid/minor-body config" << std::endl;
                 std::cout << "-----------------------------------" << std::endl;
                 exit(0);
         }
@@ -63,6 +70,7 @@ int main(int argc, char* argv[]){
     InputManager::GetInstance()->ParsePlanetFile(infile);
     InputManager::GetInstance()->ParsePlanetFile(Mooninfile);
     InputManager::GetInstance()->ParsePlanetFile(Satinfile);
+    InputManager::GetInstance()->ParseAsteroidFile(Astinfile);
     RunManager *runMan = RunManager::GetInstance();
     runMan->SetWebOut(web);
     runMan->SetTimeStep(timeStep);

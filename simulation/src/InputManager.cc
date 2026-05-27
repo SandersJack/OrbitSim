@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 InputManager::InputManager() {
 
@@ -132,5 +133,37 @@ void InputManager::ParsePlanetFile(std::string file) {
             }
             fSatelliteAtributesList.insert({name,Atributes});
         }
+    }
+}
+
+void InputManager::ParseAsteroidFile(std::string file) {
+    std::ifstream inFile(file);
+    if (!inFile) {
+        std::cout << "[InputManager] Asteroid list " << file << " not found — skipping." << std::endl;
+        return;
+    }
+    std::cout << "[InputManager] Opening Config File: " << file << std::endl;
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        if (line.empty() || line[0] == '#') continue;
+
+        // Expected: name mass[kg] radius[m] PosX[AU] PosY[AU] PosZ[AU] VelX[m/s] VelY[m/s] VelZ[m/s]
+        std::istringstream iss(line);
+        std::vector<std::string> tokens;
+        std::string tok;
+        while (iss >> tok) tokens.push_back(tok);
+        if (tokens.size() < 9) {
+            std::cout << "[InputManager] Skipping malformed asteroid row: " << line << std::endl;
+            continue;
+        }
+
+        MinorBody body;
+        body.name   = tokens[0];
+        body.mass   = std::stod(tokens[1]);
+        body.radius = std::stod(tokens[2]);
+        for (int k = 0; k < 3; ++k) body.pos[k] = std::stod(tokens[3 + k]);
+        for (int k = 0; k < 3; ++k) body.vel[k] = std::stod(tokens[6 + k]);
+        fAsteroids.push_back(body);
     }
 }
