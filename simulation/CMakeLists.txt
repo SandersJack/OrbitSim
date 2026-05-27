@@ -40,7 +40,7 @@ include_directories("Parameters/include")
 target_link_libraries(${PROJECT_NAME} Parameters)
 add_subdirectory(Parameters)
 
-set(PlanetsList Earth Mars Jupiter Saturn Uranus Neptune Venus Mercury)
+set(PlanetsList Sun Earth Mars Jupiter Saturn Uranus Neptune Venus Mercury)
 set(PlanetsIncludeDirs ${PlanetsList})
 list(TRANSFORM PlanetsIncludeDirs PREPEND "Planets/")
 list(TRANSFORM PlanetsIncludeDirs APPEND "/include")

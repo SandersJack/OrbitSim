@@ -27,7 +27,7 @@ RunManager *RunManager::GetInstance() {
 };
 
 void RunManager::Init() {
-  double AU = 1.495e11;
+  constexpr double AU = 1.49597870700e11; // IAU 2012 exact
 
   fPlanetList = InputManager::GetInstance()->GetPlanetList();
   fPlanetAtrMap = InputManager::GetInstance()->GetPlanetAtributesList();

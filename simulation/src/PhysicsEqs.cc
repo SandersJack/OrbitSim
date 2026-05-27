@@ -49,24 +49,7 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::
     std::vector<Planets*> fPlanets = RunManager::GetInstance()->GetPlanetList();
     Vector3D acc_1 = Vector3D();
 
-    /// Calc for SUN
-
-    double dx = (pos1.GetX() - 0);
-    double dy = (pos1.GetY() - 0);
-    double dz = (pos1.GetZ() - 0);
-
-    double soft = GetSofteningFactor(sqrt(dx * dx + dy * dy + dz * dz));
-
-    double inv_r3 = pow((pow(dx,2) + pow(dy,2) + pow(dz,2) + pow(0.1 ,2)),(-1.5));
-
-    double sun_mass = 1.989e30;
-    
-    acc_1.AddX(-fG_const * (dx * inv_r3) * sun_mass);
-    acc_1.AddY(-fG_const * (dy * inv_r3) * sun_mass);
-    acc_1.AddZ(-fG_const * (dz * inv_r3) * sun_mass);
-
-
-    // Calc for Planets
+    // Sum gravity from every body in the system (Sun is one of them now).
     for(Planets *p : fPlanets){
 
       double dx_n = (pos1.GetX() - p->GetPosition().GetX());
@@ -74,11 +57,10 @@ Vector3D PhysicsEqs::GetSatelliteAcceleration(Vector3D pos1, double mass1, std::
       double dz_n = (pos1.GetZ() - p->GetPosition().GetZ());
 
       double d = sqrt(dx_n * dx_n + dy_n * dy_n + dz_n * dz_n);
-
-      soft = GetSofteningFactor(d);
+      double soft = GetSofteningFactor(d);
 
       double inv_r3 = pow((pow(dx_n,2) + pow(dy_n,2) + pow(dz_n,2) + pow(soft,2)),(-1.5));
-      
+
       acc_1.AddX(-fG_const * (dx_n * inv_r3) * p->GetMass());
       acc_1.AddY(-fG_const * (dy_n * inv_r3) * p->GetMass());
       acc_1.AddZ(-fG_const * (dz_n * inv_r3) * p->GetMass());

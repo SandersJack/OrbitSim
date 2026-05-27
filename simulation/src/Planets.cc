@@ -32,11 +32,9 @@ double Planets::GetAngle(){
 
 Vector3D Planets::ComputeAcceleration() {
     PhysicsEqs *physics = PhysicsEqs::GetInstance();
-    Vector3D sun(0, 0, 0);
-    const double sun_mass = 1.989e30;
+    Vector3D acc;
 
-    Vector3D acc = physics->GetAcceleration(fPosition, sun, fMass, sun_mass, 0.1);
-
+    // Barycentric n-body: Sun is just another entry in fPlanets, no special case.
     for (Planets *other : RunManager::GetInstance()->GetPlanetList()) {
         if (other == this) continue;
         Vector3D d = physics->GetAcceleration(fPosition, other->GetPosition(), fMass, other->GetMass(), 0.1);

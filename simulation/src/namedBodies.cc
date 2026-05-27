@@ -1,5 +1,6 @@
 #include "namedBodies.hh"
 
+#include "Sun.hh"
 #include "Earth.hh"
 #include "Mars.hh"
 #include "Jupiter.hh"
@@ -25,7 +26,9 @@ namedBodies *namedBodies::GetInstance() {
 
 
 Planets *namedBodies::GetPlanetFunc(std::string planet) {
-    if(planet == "Earth"){
+    if(planet == "Sun"){
+        return new Sun();
+    } else if (planet == "Earth"){
         return new Earth();
     } else if (planet == "Mars") {
         return new Mars();
