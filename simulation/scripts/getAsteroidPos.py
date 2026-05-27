@@ -23,15 +23,24 @@ from datetime import date, timedelta
 from astroquery.jplhorizons import Horizons
 
 # (display name, Horizons ID, mass [kg], mean radius [m])
+# Asteroids — IDs end in ";" so Horizons treats them as small-body
+# designations rather than major-body records.
+# Galilean moons use major-body NAIF codes (501/502/503/504), no ";".
 BODIES = [
-    ("Ceres",   "1;",  9.3835e20, 469700.0),
-    ("Pallas",  "2;",  2.040e20,  256000.0),
-    ("Vesta",   "4;",  2.5908e20, 262700.0),
-    ("Hygiea",  "10;", 8.32e19,   215000.0),
-    ("Davida",  "511;",3.84e19,   163000.0),
-    ("Eunomia", "15;", 3.12e19,   116000.0),
-    ("Psyche",  "16;", 2.27e19,   113000.0),
-    ("Interamnia","704;", 3.79e19, 153000.0),
+    # Asteroids
+    ("Ceres",      "1;",   9.3835e20, 469700.0),
+    ("Pallas",     "2;",   2.040e20,  256000.0),
+    ("Vesta",      "4;",   2.5908e20, 262700.0),
+    ("Hygiea",     "10;",  8.32e19,   215000.0),
+    ("Davida",     "511;", 3.84e19,   163000.0),
+    ("Eunomia",    "15;",  3.12e19,   116000.0),
+    ("Psyche",     "16;",  2.27e19,   113000.0),
+    ("Interamnia", "704;", 3.79e19,   153000.0),
+    # Galilean moons (NAIF codes 501-504; Horizons returns barycentric vectors)
+    ("Io",         "501",  8.9319e22, 1821600.0),
+    ("Europa",     "502",  4.7998e22, 1560800.0),
+    ("Ganymede",   "503",  1.4819e23, 2634100.0),
+    ("Callisto",   "504",  1.0759e23, 2410300.0),
 ]
 
 

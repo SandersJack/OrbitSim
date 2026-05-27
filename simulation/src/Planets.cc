@@ -67,6 +67,21 @@ Vector3D Planets::ComputeAcceleration() {
             acc.AddX(pref * (s1 * rx + 4.0 * r_dot_v * vx));
             acc.AddY(pref * (s1 * ry + 4.0 * r_dot_v * vy));
             acc.AddZ(pref * (s1 * rz + 4.0 * r_dot_v * vz));
+
+            // Solar J2 quadrupole. Sun's rotation axis is tilted 7.25° from
+            // the ecliptic, but for a barycentric ICRS run that's a tiny
+            // correction; pick the simplest model with k̂ along +z.
+            //   a_J2 = (3 GM J2 R²)/(2 r⁵) · [(5(r̂·k̂)² - 1) r - 2(r̂·k̂) r k̂]
+            // Contributes ~0.025"/century to Mercury's perihelion advance.
+            constexpr double J2_SUN = 2.2e-7;
+            constexpr double R_SUN  = 6.957e8;
+            const double r5 = r2 * r2 * r;
+            const double rz_hat = rz / r;
+            const double j2_pref = 1.5 * GM * J2_SUN * R_SUN * R_SUN / r5;
+            const double s_par = 5.0 * rz_hat * rz_hat - 1.0;
+            acc.AddX(j2_pref *  s_par * rx);
+            acc.AddY(j2_pref *  s_par * ry);
+            acc.AddZ(j2_pref * (s_par * rz - 2.0 * rz_hat * r));
         }
     }
 
