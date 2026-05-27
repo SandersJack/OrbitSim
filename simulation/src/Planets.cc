@@ -84,12 +84,12 @@ Vector3D Planets::ComputeAcceleration() {
     return acc;
 }
 
-void Planets::KickHalf() {
-    fVelocity = fVelocity + fAcceleration * (fdt * 0.5);
+void Planets::Kick(double c) {
+    fVelocity = fVelocity + fAcceleration * (fdt * c);
 }
 
-void Planets::Drift() {
-    fPosition = fPosition + fVelocity * fdt;
+void Planets::Drift(double c) {
+    fPosition = fPosition + fVelocity * (fdt * c);
 }
 
 void Planets::RecomputeAcceleration() {

@@ -32,11 +32,12 @@ class Planets {
 
         void SetTimeStep(double val){ fdt = val;}
 
-        // Lockstep velocity-Verlet phases. RunManager calls these across all
+        // Lockstep symplectic phases. RunManager calls these across all
         // bodies so accelerations remain self-consistent under mutual gravity.
+        // Kick(c): v += a * c*dt;  Drift(c): r += v * c*dt.
         virtual Vector3D ComputeAcceleration();
-        void KickHalf();
-        void Drift();
+        void Kick(double c);
+        void Drift(double c);
         void RecomputeAcceleration();
 
     public:

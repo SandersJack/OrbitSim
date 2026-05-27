@@ -120,24 +120,40 @@ void RunManager::Run() {
 
   double t = 0;
 
-  // Step the Simualtion by Dt — lockstep velocity-Verlet (KDK).
+  // Yoshida 4th-order symplectic integrator (Forest-Ruth 1990). Three
+  // kicks per step (with the middle one negative) and four drifts;
+  // truncation error drops from O(dt²) (Verlet) to O(dt⁴), which kills
+  // most of the spurious Mercury perihelion precession seen in #14/#30.
+  //
+  // θ = 1/(2 - 2^(1/3));  drift weights θ/2, (1-θ)/2, (1-θ)/2, θ/2;
+  // kick weights θ, 1-2θ, θ.
+  constexpr double THETA = 1.3512071919596578;          // 1/(2 - 2^(1/3))
+  constexpr double C14   = THETA / 2.0;                 // 0.67560...
+  constexpr double C23   = (1.0 - THETA) / 2.0;         // -0.17560...
+  constexpr double D13   = THETA;                       // 1.35120...
+  constexpr double D2    = 1.0 - 2.0 * THETA;           // -1.70241...
+
+  auto drift = [&](double c) {
+      for (Planets *p : fPlanets) p->Drift(c);
+      for (Moons *m : fMoons) m->Drift(c);
+  };
+  auto kick = [&](double c) {
+      for (Planets *p : fPlanets) p->Kick(c);
+      for (Moons *m : fMoons) m->Kick(c);
+  };
+  auto recompute = [&]() {
+      for (Planets *p : fPlanets) p->RecomputeAcceleration();
+      for (Moons *m : fMoons) m->RecomputeAcceleration();
+  };
+
   for (int i=0; i*fdt < fStopTime*24*60*60; i++){
-    // First half-kick: v += a * dt/2 using last step's stored acceleration.
-    for(Planets *p : fPlanets) p->KickHalf();
-    for(Moons *m : fMoons) m->KickHalf();
-
-    // Drift: r += v * dt.
-    for(Planets *p : fPlanets) p->Drift();
-    for(Moons *m : fMoons) m->Drift();
-
-    // Recompute accelerations at the new positions, with every body
-    // already at t+dt so mutual-gravity terms are self-consistent.
-    for(Planets *p : fPlanets) p->RecomputeAcceleration();
-    for(Moons *m : fMoons) m->RecomputeAcceleration();
-
-    // Second half-kick: v += a * dt/2 with the fresh acceleration.
-    for(Planets *p : fPlanets) p->KickHalf();
-    for(Moons *m : fMoons) m->KickHalf();
+    drift(C14);
+    recompute(); kick(D13);
+    drift(C23);
+    recompute(); kick(D2);
+    drift(C23);
+    recompute(); kick(D13);
+    drift(C14);
 
     // Satellites integrate against the now-finalised planet state.
     for(Satellite *s : fSatellites){
