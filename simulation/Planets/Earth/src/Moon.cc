@@ -31,8 +31,10 @@ Vector3D Moon::ComputeAcceleration(){
     Vector3D origin(0, 0, 0);
     PhysicsEqs *physics = PhysicsEqs::GetInstance();
 
-    // Direct Earth pull (Earth sits at origin in the geocentric frame).
-    Vector3D a = physics->GetAcceleration(fPosition, origin, fMass, fBody->GetMass(), 0.1);
+    // Direct Earth pull in geocentric frame. Use reduced-mass M_earth+M_moon
+    // so the two-body reduction matches an inertial frame where Earth also
+    // feels Moon's pull (the Earth wobble around the Earth-Moon barycenter).
+    Vector3D a = physics->GetAcceleration(fPosition, origin, fMass, fBody->GetMass() + fMass, 0.1);
 
     // Tidal differential from every other body in fPlanets, Sun included.
     Vector3D helio_moon = fPosition + fBody->GetPosition();

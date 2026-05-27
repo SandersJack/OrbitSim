@@ -63,6 +63,11 @@ def main(path: str) -> None:
         span_yr = (times[-1] - times[0]) / YR
         print(f"{path}: span {span_yr:.1f} yr, {len(times)} steps\n")
 
+        # Heliocentric elements: subtract the Sun's barycentric position so
+        # numbers compare directly to NASA's heliocentric fact-sheet values.
+        sun = f.get("Planets/Sun")
+        sun_pos = sun["position"][:] if sun is not None else None
+
         header = f"{'body':<10} {'a (AU)':>9} {'Δa %':>7} {'e':>8} {'Δe %':>9} {'T (d)':>9} {'ΔT %':>7}"
         print(header)
         print("-" * len(header))
@@ -71,7 +76,10 @@ def main(path: str) -> None:
             grp = f.get(f"Planets/{name}")
             if grp is None:
                 continue
-            a, e, T = derive_elements(times, grp["position"][:])
+            pos = grp["position"][:]
+            if sun_pos is not None:
+                pos = pos - sun_pos
+            a, e, T = derive_elements(times, pos)
             print(
                 f"{name:<10} "
                 f"{a:>9.5f} {pct(a, a_ref):>+7.2f} "
