@@ -2,14 +2,13 @@
 #define Hdf5IO_H
 
 #include <string>
-#include <vector>
-#include <array>
-#include <unordered_map>
+#include <memory>
 
 class Hdf5IO {
 
     public:
         Hdf5IO();
+        ~Hdf5IO();
 
         static Hdf5IO *GetInstance();
 
@@ -23,16 +22,10 @@ class Hdf5IO {
     private:
         std::string fOutFilename;
 
-        std::vector<double> fTime;
-
-        // group ("Planets" / "Moons" / "Satellites") -> body name -> per-step position/velocity
-        using Track = std::vector<std::array<double, 3>>;
-        std::unordered_map<std::string, std::unordered_map<std::string, Track>> fPositions;
-        std::unordered_map<std::string, std::unordered_map<std::string, Track>> fVelocities;
-
-        std::vector<std::string> fPlanetNames;
-        std::vector<std::string> fMoonNames;
-        std::vector<std::string> fSatelliteNames;
+        // HighFive handles + flush buffers live in the .cc (PIMPL) so the
+        // HDF5 headers don't leak into everything that includes RunManager.hh.
+        struct Impl;
+        std::unique_ptr<Impl> fImpl;
 };
 
 #endif

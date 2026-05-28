@@ -9,9 +9,9 @@ class Vector3D {
         Vector3D(Vector3D *val);
         ~Vector3D();
 
-        double GetX(){return fx;}
-        double GetY(){return fy;}
-        double GetZ(){return fz;}
+        double GetX() const {return fx;}
+        double GetY() const {return fy;}
+        double GetZ() const {return fz;}
 
         void SetX(double val){fx = val;}
         void SetY(double val){fy = val;}
