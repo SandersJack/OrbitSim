@@ -21,8 +21,6 @@ class Hdf5IO {
         void SetFilename(const std::string &val) { fOutFilename = val; }
 
     private:
-        static Hdf5IO *fInstance;
-
         std::string fOutFilename;
 
         std::vector<double> fTime;

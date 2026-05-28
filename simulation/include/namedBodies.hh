@@ -19,7 +19,6 @@ class namedBodies {
         Satellite *GetSatelliteFunc(std::string sat);
 
     private:
-        static namedBodies *fInstance;
 };
 
 #endif

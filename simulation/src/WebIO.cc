@@ -8,13 +8,10 @@ WebIO::WebIO(): fOutFilename("proton.root") {
     std::cout << "[WEBIO] Saving to JSON file for Web Use" << std::endl;
 }
 
-WebIO *WebIO::fInstance = nullptr;
-
 WebIO *WebIO::GetInstance() {
-  if(!fInstance)
-    fInstance = new WebIO();
-  return fInstance;
-};
+    static WebIO instance;
+    return &instance;
+}
 
 void WebIO::Init(){
     fJsonWriter = JsonWriter::GetInstance();

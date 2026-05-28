@@ -39,8 +39,6 @@ class JsonWriter {
         void SetCelestialInfo(CelestialInfo val) {fCelestialInfo = val;}
 
     private:
-        static JsonWriter *fInstance;
-
         const char *fOutFilename;
 
         std::string fjsonContent_;

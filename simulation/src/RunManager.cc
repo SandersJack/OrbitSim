@@ -18,13 +18,10 @@
 RunManager::RunManager(): fdt(0), fStopTime(0) {
 }
 
-RunManager *RunManager::fInstance = nullptr;
-
 RunManager *RunManager::GetInstance() {
-  if(!fInstance)
-    fInstance = new RunManager();
-  return fInstance;
-};
+    static RunManager instance;
+    return &instance;
+}
 
 void RunManager::Init() {
   constexpr double AU = 1.49597870700e11; // IAU 2012 exact

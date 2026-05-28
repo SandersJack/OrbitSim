@@ -20,8 +20,6 @@ class WebIO {
         void SetFilename(const char *val) {fOutFilename = val;}
 
     private:
-        static WebIO *fInstance;
-
         const char *fOutFilename;
 
         JsonWriter *fJsonWriter;

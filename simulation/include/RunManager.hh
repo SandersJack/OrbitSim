@@ -43,7 +43,6 @@ class RunManager {
         std::vector<Satellite *>  GetSatelliteList() { return fSatellites;}
 
     private:
-        static RunManager *fInstance;
         Moon *fMoon;
 
         double fdt;

@@ -20,13 +20,10 @@ JsonWriter::JsonWriter(): fOutFilename("proton.json"){
     fjsonContent_ = "{\n  \"simulation\": {\n \"time_steps\": [";
 }
 
-JsonWriter *JsonWriter::fInstance = nullptr;
-
 JsonWriter *JsonWriter::GetInstance() {
-  if(!fInstance)
-    fInstance = new JsonWriter();
-  return fInstance;
-};
+    static JsonWriter instance;
+    return &instance;
+}
 
 void JsonWriter::addData(double time, bool lastStep) {
     fjsonContent_ += "    {\n";

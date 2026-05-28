@@ -10,13 +10,10 @@ PhysicsEqs::PhysicsEqs(): fG_const(0){
 PhysicsEqs::~PhysicsEqs(){
 }
 
-PhysicsEqs *PhysicsEqs::fInstance = nullptr;
-
 PhysicsEqs *PhysicsEqs::GetInstance() {
-  if(!fInstance)
-    fInstance = new PhysicsEqs();
-  return fInstance;
-};
+    static PhysicsEqs instance;
+    return &instance;
+}
 
 
 Vector3D PhysicsEqs::GetAcceleration(Vector3D pos1, Vector3D pos2, double mass1, double mass2, double soft){

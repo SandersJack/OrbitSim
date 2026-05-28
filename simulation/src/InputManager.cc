@@ -10,12 +10,9 @@ InputManager::InputManager() {
 
 }
 
-InputManager *InputManager::fInstance = nullptr;
-
 InputManager *InputManager::GetInstance() {
-    if(!fInstance)
-        fInstance = new InputManager();
-    return fInstance;
+    static InputManager instance;
+    return &instance;
 }
 
 
@@ -44,92 +41,62 @@ void InputManager::ParsePlanetFile(std::string file) {
                 tokens.push_back(s);
             }
             
-            std::string Sat = "";
-            std::string name = "";
-            std::string Planet = "";
+            std::string name;
             std::vector<double> Atributes;
-            bool write = false;
-            bool write_name = false;
-            for(int t{0}; t<tokens.size(); t++){
+            for(std::size_t t = 0; t < tokens.size(); t++){
                 if(t == 0){
                     name = tokens[t];
                     fPlanetList.push_back(tokens[0]);
-                }
-                if(t>0){
-                    double inter = std::stod(tokens[t]);
-                    Atributes.push_back(inter);
+                } else {
+                    Atributes.push_back(std::stod(tokens[t]));
                 }
             }
             fPlanetAtributesList.insert({name,Atributes});
         }
     } else if(file.find("Moons") != std::string::npos) {
+        // Each line is "Moon(Planet)".
         while (std::getline(inFile, x)) {
             if(x.find('#') != std::string::npos)
                 continue;
-            std::string Moon = "";
-            std::string Planet = "";
-            bool write = false;
-            for (int i = 0; i < x.length(); i++) {
-                // Print current character
-                if(x[i-1] == '('){
-                    Moon = x.substr(0, i-1);
-                    write = true;
-                }
-                if(write){
-                    if(x[i] == ')')
-                        break;
-                    Planet += x[i];
-                }
-            }
+            std::size_t open  = x.find('(');
+            std::size_t close = x.find(')');
+            if(open == std::string::npos || close == std::string::npos || close < open)
+                continue;
+            std::string Moon   = x.substr(0, open);
+            std::string Planet = x.substr(open + 1, close - open - 1);
             fMoonsList.insert({Planet,Moon});
         }
     } else if(file.find("Satellite") != std::string::npos) {
+        // First token is "Type(Name,Planet)"; the rest are numeric attributes.
         while (std::getline(inFile, x)) {
             if(x.find('#') != std::string::npos)
                 continue;
-            
+
             std::vector<std::string> tokens;
-        
             std::istringstream iss(x);
             std::string s;
             while (iss >> s) {
                 tokens.push_back(s);
             }
-            
-            std::string Sat = "";
-            std::string name = "";
-            std::string Planet = "";
+            if(tokens.empty())
+                continue;
+
+            const std::string &head = tokens[0];
+            std::size_t open  = head.find('(');
+            std::size_t comma = head.find(',');
+            std::size_t close = head.find(')');
+            if(open == std::string::npos || comma == std::string::npos ||
+               close == std::string::npos)
+                continue;
+
+            std::string Sat    = head.substr(0, open);
+            std::string name   = head.substr(open + 1, comma - open - 1);
+            std::string Planet = head.substr(comma + 1, close - comma - 1);
+            fSatelliteList[Planet].push_back(std::make_pair(Sat, name));
+
             std::vector<double> Atributes;
-            bool write = false;
-            bool write_name = false;
-            for(int t{0}; t<tokens.size(); t++){
-                if(t == 0){
-                    for (int i = 0; i < tokens[t].length(); i++) {
-                        // Print current character
-                        if(x[i-1] == '('){
-                            Sat = tokens[t].substr(0, i-1);
-                            write = true;
-                            write_name = true;
-                        }
-                        if(write_name){
-                            if(tokens[t][i] == ','){
-                                write_name = false;
-                                continue;
-                            }
-                            name += x[i];
-                        }
-                        if(write && !write_name){
-                            if(tokens[t][i] == ')')
-                                break;
-                            Planet += x[i];
-                        }
-                    }
-                    fSatelliteList[Planet].push_back(std::make_pair(Sat,name));
-                }
-                if(t>0){
-                    double inter = std::stod(tokens[t]);
-                    Atributes.push_back(inter);
-                }
+            for(std::size_t t = 1; t < tokens.size(); t++){
+                Atributes.push_back(std::stod(tokens[t]));
             }
             fSatelliteAtributesList.insert({name,Atributes});
         }

@@ -16,13 +16,10 @@ namedBodies::namedBodies(){
 
 }
 
-namedBodies *namedBodies::fInstance = nullptr;
-
 namedBodies *namedBodies::GetInstance() {
-  if(!fInstance)
-    fInstance = new namedBodies();
-  return fInstance;
-};
+    static namedBodies instance;
+    return &instance;
+}
 
 
 Planets *namedBodies::GetPlanetFunc(std::string planet) {

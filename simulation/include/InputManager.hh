@@ -37,8 +37,6 @@ class InputManager {
         const std::vector<MinorBody>& GetAsteroids() const { return fAsteroids; }
 
     private:
-        static InputManager *fInstance;
-
         std::vector<std::string> fPlanetList;
         std::map<std::string, std::vector<double>> fPlanetAtributesList;
 

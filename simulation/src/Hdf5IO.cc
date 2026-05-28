@@ -15,12 +15,9 @@ Hdf5IO::Hdf5IO(): fOutFilename("proton.h5") {
 
 }
 
-Hdf5IO *Hdf5IO::fInstance = nullptr;
-
 Hdf5IO *Hdf5IO::GetInstance() {
-    if(!fInstance)
-        fInstance = new Hdf5IO();
-    return fInstance;
+    static Hdf5IO instance;
+    return &instance;
 }
 
 void Hdf5IO::Init() {

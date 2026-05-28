@@ -18,7 +18,6 @@ class PhysicsEqs{
 
 
     private:
-        static PhysicsEqs *fInstance;
         double fG_const;
 };
 
